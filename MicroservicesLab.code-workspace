@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../MicroservicesLab-IdentityService"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "MicroservicesLab-IdentityService"
+	}
+}
