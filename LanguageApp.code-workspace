@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../LanguageApp-IdentitySvc"
+		},
+		{
+			"path": "../LanguageApp-PhrasalVerbsSvc"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "LanguageApp-IdentityService"
+	}
+}

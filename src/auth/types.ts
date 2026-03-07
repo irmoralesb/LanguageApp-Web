@@ -1,5 +1,5 @@
 /**
- * Auth-related types. JWT payload shape matches IdentityService token.
+ * Auth-related types. JWT payload shape matches LanguageApp Identity Service token.
  */
 export interface TokenPayload {
   sub: string
@@ -12,6 +12,6 @@ export interface TokenPayload {
 export interface AuthUser {
   id: string
   email: string
-  /** Roles by service, e.g. { "identity-service": ["admin"] } */
+  /** Roles by service (e.g. LanguageApp Identity Service: "identity-service": ["admin"]) */
   roles: Record<string, string[]>
 }
