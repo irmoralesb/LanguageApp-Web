@@ -1,5 +1,5 @@
 /**
- * DTOs matching MicroservicesLab-IdentityService API.
+ * DTOs matching LanguageApp Identity Service API.
  */
 
 export interface UserProfileResponse {

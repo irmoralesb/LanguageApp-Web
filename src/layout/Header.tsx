@@ -20,7 +20,7 @@ export function Header() {
     <header className="bg-slate-800 text-white shadow">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="text-lg font-semibold">
-          MicroservicesLab
+          LanguageApp
         </Link>
 
         {/* Desktop nav */}
@@ -101,7 +101,7 @@ export function Header() {
                   </div>
                 )}
               </div>
-              {/* Placeholder for future microservices */}
+              {/* Placeholder for future LanguageApp services (e.g. Phrasal Verbs) */}
               <span className="rounded px-2 py-1 text-slate-500">More services…</span>
               <button
                 type="button"

@@ -20,8 +20,8 @@ export function identityUrl(path: string): string {
 /**
  * Fetch with optional Bearer token. Use this for all Identity Service calls.
  * Attaches Authorization: Bearer <token> when token is provided.
- * TODO: In each feature, implement the actual call and handle response (JSON parse)
- * and errors (4xx/5xx, network errors) where the endpoint is invoked.
+ * TODO: In each feature, implement the actual call to the LanguageApp Identity API
+ * and handle response (JSON parse) and errors (4xx/5xx, network errors) where the endpoint is invoked.
  *
  * Example (to implement in login feature):
  *   const res = await fetchWithAuth(identityUrl(endpoints.auth.login), {
