@@ -52,3 +52,30 @@ export const endpoints = {
     unassign: (userId: string, serviceId: string) => `/api/v1/users/services/${userId}/${serviceId}`,
   },
 } as const
+
+/**
+ * URL path constants for Phrasal Verbs Service API.
+ * Use with phrasalVerbsUrl() from api/client to form full URLs.
+ */
+export const pvEndpoints = {
+  phrasalVerbs: {
+    catalog: '/api/v1/phrasal-verbs/catalog',
+    byId: (id: string) => `/api/v1/phrasal-verbs/${id}`,
+  },
+  profile: {
+    get: '/api/v1/profile',
+    create: '/api/v1/profile',
+    update: '/api/v1/profile',
+    selections: '/api/v1/profile/phrasal-verbs',
+    addSelection: '/api/v1/profile/phrasal-verbs',
+    removeSelection: (phrasalVerbId: string) => `/api/v1/profile/phrasal-verbs/${phrasalVerbId}`,
+  },
+  languages: {
+    native: '/api/v1/languages/native',
+    target: '/api/v1/languages/target',
+  },
+  exercises: {
+    generate: '/api/v1/exercises/generate',
+    evaluate: '/api/v1/exercises/evaluate',
+  },
+} as const

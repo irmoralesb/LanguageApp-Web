@@ -20,6 +20,7 @@ interface AuthContextValue {
   setToken: (token: string | null) => void;
   logout: () => void;
   isAdmin: boolean;
+  hasPhrasalVerbsAccess: boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -113,9 +114,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return user?.roles?.["identity-service"]?.includes("admin") ?? false;
   }, [user]);
 
+  const hasPhrasalVerbsAccess = useMemo(() => {
+    const roles = user?.roles?.["phrasalverbs-service"];
+    return Array.isArray(roles) && roles.length > 0;
+  }, [user]);
+
   const value = useMemo<AuthContextValue>(
-    () => ({ token, user, setToken, logout, isAdmin }),
-    [token, user, setToken, logout, isAdmin],
+    () => ({ token, user, setToken, logout, isAdmin, hasPhrasalVerbsAccess }),
+    [token, user, setToken, logout, isAdmin, hasPhrasalVerbsAccess],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

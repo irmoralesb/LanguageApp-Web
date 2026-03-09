@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 
 export function Header() {
-  const { token, isAdmin, logout } = useAuth()
+  const { token, isAdmin, hasPhrasalVerbsAccess, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
@@ -101,8 +101,14 @@ export function Header() {
                   </div>
                 )}
               </div>
-              {/* Placeholder for future LanguageApp services (e.g. Phrasal Verbs) */}
-              <span className="rounded px-2 py-1 text-slate-500">More services…</span>
+              {hasPhrasalVerbsAccess && (
+                <Link
+                  to="/phrasal-verbs"
+                  className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                >
+                  Phrasal Verbs
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}
@@ -190,7 +196,15 @@ export function Header() {
                 >
                   Change Password
                 </Link>
-                <span className="rounded px-3 py-2 text-slate-500">More services…</span>
+                {hasPhrasalVerbsAccess && (
+                  <Link
+                    to="/phrasal-verbs"
+                    className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Phrasal Verbs
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={() => {
