@@ -10,6 +10,7 @@ import { UsersPage } from '@/features/admin/UsersPage'
 import { UserServicesPage } from '@/features/admin/UserServicesPage'
 import { UpdateProfilePage } from '@/features/profile/UpdateProfilePage'
 import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
+import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 
 function App() {
   return (
@@ -63,6 +64,15 @@ function App() {
           element={
             <ProtectedRoute>
               <UserServicesPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Phrasal Verbs */}
+        <Route
+          path="/phrasal-verbs"
+          element={
+            <ProtectedRoute>
+              <PhrasalVerbsPage />
             </ProtectedRoute>
           }
         />

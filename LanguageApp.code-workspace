@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../LanguageApp-PhrasalVerbsSvc"
+		},
+		{
+			"path": "../LanguageApp-Scripts"
 		}
 	],
 	"settings": {
