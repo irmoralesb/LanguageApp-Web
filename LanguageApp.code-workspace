@@ -10,6 +10,9 @@
 			"path": "../LanguageApp-PhrasalVerbsSvc"
 		},
 		{
+			"path": "../LanguageApp-PrepositionsSvc"
+		},
+		{
 			"path": "../LanguageApp-Scripts"
 		}
 	],

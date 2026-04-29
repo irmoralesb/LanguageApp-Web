@@ -11,6 +11,7 @@ import { UserServicesPage } from '@/features/admin/UserServicesPage'
 import { UpdateProfilePage } from '@/features/profile/UpdateProfilePage'
 import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
+import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
 
 function App() {
   return (
@@ -73,6 +74,14 @@ function App() {
           element={
             <ProtectedRoute>
               <PhrasalVerbsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/prepositions"
+          element={
+            <ProtectedRoute>
+              <PrepositionsPage />
             </ProtectedRoute>
           }
         />
