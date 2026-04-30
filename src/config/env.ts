@@ -3,6 +3,7 @@
  */
 const identityBaseUrl = import.meta.env.VITE_API_IDENTITY_URL
 const phrasalVerbsBaseUrl = import.meta.env.VITE_API_PHRASAL_VERBS_URL
+const prepositionsBaseUrl = import.meta.env.VITE_API_PREPOSITIONS_URL
 
 function cleanUrl(raw: unknown): string {
   return typeof raw === 'string' && raw ? raw.replace(/\/$/, '') : ''
@@ -13,4 +14,6 @@ export const env = {
   apiIdentityUrl: cleanUrl(identityBaseUrl),
   /** Base URL for the Phrasal Verbs Service (e.g. http://localhost:8001) */
   apiPhrasalVerbsUrl: cleanUrl(phrasalVerbsBaseUrl),
+  /** Base URL for the Prepositions Service (e.g. http://localhost:8002) */
+  apiPrepositionsUrl: cleanUrl(prepositionsBaseUrl),
 } as const

@@ -79,3 +79,30 @@ export const pvEndpoints = {
     evaluate: '/api/v1/exercises/evaluate',
   },
 } as const
+
+/**
+ * URL path constants for Prepositions Service API.
+ * Use with prepositionsUrl() from api/client.
+ */
+export const prepEndpoints = {
+  practiceTerms: {
+    catalog: '/api/v1/practice-terms/catalog',
+    byId: (id: string) => `/api/v1/practice-terms/${id}`,
+  },
+  profile: {
+    get: '/api/v1/profile',
+    create: '/api/v1/profile',
+    update: '/api/v1/profile',
+    selections: '/api/v1/profile/practice-terms',
+    addSelection: '/api/v1/profile/practice-terms',
+    removeSelection: (practiceTermId: string) => `/api/v1/profile/practice-terms/${practiceTermId}`,
+  },
+  languages: {
+    native: '/api/v1/languages/native',
+    target: '/api/v1/languages/target',
+  },
+  exercises: {
+    generate: '/api/v1/exercises/generate',
+    evaluate: '/api/v1/exercises/evaluate',
+  },
+} as const

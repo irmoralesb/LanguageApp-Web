@@ -27,6 +27,15 @@ export function phrasalVerbsUrl(path: string): string {
 }
 
 /**
+ * Build full URL for a Prepositions Service path.
+ */
+export function prepositionsUrl(path: string): string {
+  const base = env.apiPrepositionsUrl
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
+/**
  * Fetch with optional Bearer token. Use this for all Identity Service calls.
  * Attaches Authorization: Bearer <token> when token is provided.
  * TODO: In each feature, implement the actual call to the LanguageApp Identity API

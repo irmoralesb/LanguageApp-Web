@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 
 export function Header() {
-  const { token, isAdmin, hasPhrasalVerbsAccess, logout } = useAuth()
+  const { token, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
@@ -109,6 +109,14 @@ export function Header() {
                   Phrasal Verbs
                 </Link>
               )}
+              {hasPrepositionsAccess && (
+                <Link
+                  to="/prepositions"
+                  className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                >
+                  Prepositions
+                </Link>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}
@@ -203,6 +211,15 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                   >
                     Phrasal Verbs
+                  </Link>
+                )}
+                {hasPrepositionsAccess && (
+                  <Link
+                    to="/prepositions"
+                    className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Prepositions
                   </Link>
                 )}
                 <button
