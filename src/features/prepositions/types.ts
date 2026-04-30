@@ -48,3 +48,32 @@ export interface ExerciseEvaluationResponse {
   feedback: string
   correct_example: string | null
 }
+
+export interface MultiplePrepositionsExercisePromptResponse {
+  practice_term_ids: string[]
+  practice_term_texts: string[]
+  target_language_code: string
+  sentence_native: string
+  prompt_token: string
+}
+
+export interface MultiplePrepositionsAnswerRequest {
+  prompt_token: string
+  user_answer: string
+  attempt_number: 1 | 2
+}
+
+export interface PrepositionFeedbackItem {
+  preposition: string
+  used_correctly: boolean
+  explanation: string
+}
+
+export interface MultiplePrepositionsEvaluationResponse {
+  is_correct: boolean
+  feedback: string
+  preposition_feedback: PrepositionFeedbackItem[]
+  minor_issues: string[]
+  attempt_number: number
+  correct_sentence_target: string | null
+}

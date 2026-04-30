@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import { ProfileSetup } from './components/ProfileSetup'
 import { PracticeTermSelector } from './components/PracticeTermSelector'
-import { ExerciseView } from './components/ExerciseView'
+import { MultiplePrepositionsExerciseView } from './components/MultiplePrepositionsExerciseView'
 import { usePrepositionsGate } from './hooks/usePrepositionsGate'
 
-export function PrepositionsPage() {
+export function MultiplePrepositionsPage() {
   const {
     view,
     profile,
@@ -20,7 +20,7 @@ export function PrepositionsPage() {
   if (error) {
     return (
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-2xl font-semibold text-slate-800">Single Preposition</h1>
+        <h1 className="mb-4 text-2xl font-semibold text-slate-800">Multiple Prepositions</h1>
         <div className="rounded border border-red-300 bg-red-50 p-4 text-red-700">{error}</div>
         <button
           type="button"
@@ -36,7 +36,7 @@ export function PrepositionsPage() {
   if (view === 'loading') {
     return (
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-4 text-2xl font-semibold text-slate-800">Single Preposition</h1>
+        <h1 className="mb-4 text-2xl font-semibold text-slate-800">Multiple Prepositions</h1>
         <p className="text-slate-500">Loading...</p>
       </div>
     )
@@ -45,7 +45,7 @@ export function PrepositionsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-800">Single Preposition</h1>
+        <h1 className="text-2xl font-semibold text-slate-800">Multiple Prepositions</h1>
         <Link
           to="/"
           className="text-sm text-slate-600 underline hover:text-slate-800"
@@ -67,7 +67,7 @@ export function PrepositionsPage() {
       )}
 
       {view === 'ready' && profile && (
-        <ExerciseView
+        <MultiplePrepositionsExerciseView
           profile={profile}
           selections={selections}
           onOpenSelector={showSelection}
