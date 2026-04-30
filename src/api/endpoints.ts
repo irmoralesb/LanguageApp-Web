@@ -80,6 +80,7 @@ export const pvEndpoints = {
   },
 } as const
 
+
 /**
  * URL path constants for Prepositions Service API.
  * Use with prepositionsUrl() from api/client.
@@ -104,5 +105,10 @@ export const prepEndpoints = {
   exercises: {
     generate: '/api/v1/exercises/generate',
     evaluate: '/api/v1/exercises/evaluate',
+    multiplePrepositions: {
+      generate: '/api/v1/exercises/multiple-prepositions/generate',
+      evaluate: '/api/v1/exercises/multiple-prepositions/evaluate',
+      history: '/api/v1/exercises/multiple-prepositions/history',
+    },
   },
 } as const

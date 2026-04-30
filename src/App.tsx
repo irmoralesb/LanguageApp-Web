@@ -12,6 +12,7 @@ import { UpdateProfilePage } from '@/features/profile/UpdateProfilePage'
 import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
+import { MultiplePrepositionsPage } from '@/features/prepositions/MultiplePrepositionsPage'
 
 function App() {
   return (
@@ -82,6 +83,14 @@ function App() {
           element={
             <ProtectedRoute>
               <PrepositionsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/prepositions/multiple"
+          element={
+            <ProtectedRoute>
+              <MultiplePrepositionsPage />
             </ProtectedRoute>
           }
         />

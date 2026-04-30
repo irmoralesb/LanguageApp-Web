@@ -8,8 +8,10 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [prepositionsOpen, setPrepositionsOpen] = useState(false)
   const adminRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
+  const prepositionsRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = () => {
     logout()
@@ -110,12 +112,39 @@ export function Header() {
                 </Link>
               )}
               {hasPrepositionsAccess && (
-                <Link
-                  to="/prepositions"
-                  className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
-                >
-                  Prepositions
-                </Link>
+                <div className="relative" ref={prepositionsRef}>
+                  <button
+                    type="button"
+                    onClick={() => setPrepositionsOpen((o) => !o)}
+                    className="flex items-center gap-1 rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                  >
+                    Prepositions
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {prepositionsOpen && (
+                    <div
+                      className="absolute right-0 top-full z-50 mt-1 min-w-[200px] rounded border border-slate-600 bg-slate-800 shadow-lg"
+                      onMouseLeave={() => setPrepositionsOpen(false)}
+                    >
+                      <Link
+                        to="/prepositions"
+                        className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                        onClick={() => setPrepositionsOpen(false)}
+                      >
+                        Single Preposition
+                      </Link>
+                      <Link
+                        to="/prepositions/multiple"
+                        className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                        onClick={() => setPrepositionsOpen(false)}
+                      >
+                        Multiple Prepositions
+                      </Link>
+                    </div>
+                  )}
+                </div>
               )}
               <button
                 type="button"
@@ -214,13 +243,25 @@ export function Header() {
                   </Link>
                 )}
                 {hasPrepositionsAccess && (
-                  <Link
-                    to="/prepositions"
-                    className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Prepositions
-                  </Link>
+                  <>
+                    <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      Prepositions
+                    </div>
+                    <Link
+                      to="/prepositions"
+                      className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Single Preposition
+                    </Link>
+                    <Link
+                      to="/prepositions/multiple"
+                      className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Multiple Prepositions
+                    </Link>
+                  </>
                 )}
                 <button
                   type="button"
