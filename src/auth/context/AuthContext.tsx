@@ -22,6 +22,7 @@ interface AuthContextValue {
   isAdmin: boolean;
   hasPhrasalVerbsAccess: boolean;
   hasPrepositionsAccess: boolean;
+  hasChatPracticeAccess: boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -125,6 +126,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return Array.isArray(roles) && roles.length > 0;
   }, [user]);
 
+  const hasChatPracticeAccess = useMemo(() => {
+    const roles = user?.roles?.["chat-practice-service"];
+    return Array.isArray(roles) && roles.length > 0;
+  }, [user]);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       token,
@@ -134,8 +140,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAdmin,
       hasPhrasalVerbsAccess,
       hasPrepositionsAccess,
+      hasChatPracticeAccess,
     }),
-    [token, user, setToken, logout, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess],
+    [token, user, setToken, logout, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
