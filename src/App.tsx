@@ -13,6 +13,7 @@ import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
 import { MultiplePrepositionsPage } from '@/features/prepositions/MultiplePrepositionsPage'
+import { ChatPracticePage } from '@/features/chat-practice/ChatPracticePage'
 
 function App() {
   return (
@@ -91,6 +92,15 @@ function App() {
           element={
             <ProtectedRoute>
               <MultiplePrepositionsPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Chat Practice */}
+        <Route
+          path="/chat-practice"
+          element={
+            <ProtectedRoute>
+              <ChatPracticePage />
             </ProtectedRoute>
           }
         />

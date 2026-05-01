@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 
 export function Header() {
-  const { token, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, logout } = useAuth()
+  const { token, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
@@ -109,6 +109,14 @@ export function Header() {
                   className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
                 >
                   Phrasal Verbs
+                </Link>
+              )}
+              {hasChatPracticeAccess && (
+                <Link
+                  to="/chat-practice"
+                  className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                >
+                  Chat Practice
                 </Link>
               )}
               {hasPrepositionsAccess && (
@@ -240,6 +248,15 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                   >
                     Phrasal Verbs
+                  </Link>
+                )}
+                {hasChatPracticeAccess && (
+                  <Link
+                    to="/chat-practice"
+                    className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Chat Practice
                   </Link>
                 )}
                 {hasPrepositionsAccess && (

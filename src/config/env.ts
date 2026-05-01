@@ -4,6 +4,7 @@
 const identityBaseUrl = import.meta.env.VITE_API_IDENTITY_URL
 const phrasalVerbsBaseUrl = import.meta.env.VITE_API_PHRASAL_VERBS_URL
 const prepositionsBaseUrl = import.meta.env.VITE_API_PREPOSITIONS_URL
+const chatPracticeBaseUrl = import.meta.env.VITE_API_CHAT_PRACTICE_URL
 
 function cleanUrl(raw: unknown): string {
   return typeof raw === 'string' && raw ? raw.replace(/\/$/, '') : ''
@@ -16,4 +17,6 @@ export const env = {
   apiPhrasalVerbsUrl: cleanUrl(phrasalVerbsBaseUrl),
   /** Base URL for the Prepositions Service (e.g. http://localhost:8002) */
   apiPrepositionsUrl: cleanUrl(prepositionsBaseUrl),
+  /** Base URL for the Chat Practice Service (e.g. http://localhost:8003) */
+  apiChatPracticeUrl: cleanUrl(chatPracticeBaseUrl),
 } as const
