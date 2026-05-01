@@ -82,6 +82,20 @@ export const pvEndpoints = {
 
 
 /**
+ * URL path constants for Chat Practice Service API.
+ * Use with chatPracticeUrl() from api/client.
+ */
+export const chatPracticeEndpoints = {
+  sessions: {
+    create: '/api/v1/chat/sessions',
+    list: '/api/v1/chat/sessions',
+    get: (sessionId: string) => `/api/v1/chat/sessions/${sessionId}`,
+    delete: (sessionId: string) => `/api/v1/chat/sessions/${sessionId}`,
+    sendMessage: (sessionId: string) => `/api/v1/chat/sessions/${sessionId}/messages`,
+  },
+} as const
+
+/**
  * URL path constants for Prepositions Service API.
  * Use with prepositionsUrl() from api/client.
  */
