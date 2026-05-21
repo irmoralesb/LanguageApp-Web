@@ -17,9 +17,19 @@
 		},
 		{
 			"path": "../LanguageApp-ChatPractice"
+		},
+		{
+			"path": "../LanguageApp-GermanNounsSvc"
+		},
+		{
+			"path": "../LanguageApp-GermanVerbsSvc"
 		}
 	],
 	"settings": {
 		"powershell.cwd": "LanguageApp-IdentityService"
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": []
 	}
 }

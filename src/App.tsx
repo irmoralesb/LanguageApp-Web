@@ -14,6 +14,9 @@ import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
 import { MultiplePrepositionsPage } from '@/features/prepositions/MultiplePrepositionsPage'
 import { ChatPracticePage } from '@/features/chat-practice/ChatPracticePage'
+import { GermanNounsPage } from '@/features/german-nouns/GermanNounsPage'
+import { GermanVerbsPage } from '@/features/german-verbs/GermanVerbsPage'
+import { ServiceAccessRoute } from '@/auth/ServiceAccessRoute'
 
 function App() {
   return (
@@ -100,7 +103,30 @@ function App() {
           path="/chat-practice"
           element={
             <ProtectedRoute>
-              <ChatPracticePage />
+              <ServiceAccessRoute serviceName="chat-practice-service">
+                <ChatPracticePage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        {/* German */}
+        <Route
+          path="/german/nouns"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="german-nouns-service">
+                <GermanNounsPage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/german/verbs"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="german-verbs-service">
+                <GermanVerbsPage />
+              </ServiceAccessRoute>
             </ProtectedRoute>
           }
         />

@@ -53,6 +53,9 @@ export interface ServiceResponse {
   is_active: boolean
   url: string | null
   port: number | null
+  language_code?: string | null
+  module_key?: string | null
+  display_order?: number | null
 }
 
 export interface ServiceCreateRequest {
@@ -61,6 +64,9 @@ export interface ServiceCreateRequest {
   is_active: boolean
   url: string | null
   port: number | null
+  language_code?: string | null
+  module_key?: string | null
+  display_order?: number | null
 }
 
 export interface ServiceUpdateRequest {
@@ -69,6 +75,9 @@ export interface ServiceUpdateRequest {
   is_active: boolean
   url: string | null
   port: number | null
+  language_code?: string | null
+  module_key?: string | null
+  display_order?: number | null
 }
 
 export interface RoleResponse {
