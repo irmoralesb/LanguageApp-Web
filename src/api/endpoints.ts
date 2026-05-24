@@ -126,3 +126,49 @@ export const prepEndpoints = {
     },
   },
 } as const
+
+export const germanNounsEndpoints = {
+  catalog: {
+    list: '/api/v1/german-nouns/catalog',
+    byId: (id: string) => `/api/v1/german-nouns/${id}`,
+  },
+  profile: {
+    get: '/api/v1/profile',
+    create: '/api/v1/profile',
+    update: '/api/v1/profile',
+    selections: '/api/v1/profile/german-nouns',
+    addSelection: '/api/v1/profile/german-nouns',
+    removeSelection: (id: string) => `/api/v1/profile/german-nouns/${id}`,
+  },
+  languages: {
+    native: '/api/v1/languages/native',
+    target: '/api/v1/languages/target',
+  },
+  exercises: {
+    generate: '/api/v1/exercises/generate',
+    evaluate: '/api/v1/exercises/evaluate',
+  },
+} as const
+
+export const germanVerbsEndpoints = {
+  catalog: {
+    list: '/api/v1/german-verbs/catalog',
+    byId: (id: string) => `/api/v1/german-verbs/${id}`,
+  },
+  profile: {
+    get: '/api/v1/profile',
+    create: '/api/v1/profile',
+    update: '/api/v1/profile',
+    selections: '/api/v1/profile/german-verbs',
+    addSelection: '/api/v1/profile/german-verbs',
+    removeSelection: (id: string) => `/api/v1/profile/german-verbs/${id}`,
+  },
+  languages: {
+    native: '/api/v1/languages/native',
+    target: '/api/v1/languages/target',
+  },
+  exercises: {
+    generate: '/api/v1/exercises/generate',
+    evaluate: '/api/v1/exercises/evaluate',
+  },
+} as const

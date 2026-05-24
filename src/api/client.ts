@@ -44,6 +44,18 @@ export function chatPracticeUrl(path: string): string {
   return base ? `${base}${normalized}` : ''
 }
 
+export function germanNounsUrl(path: string): string {
+  const base = env.apiGermanNounsUrl
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
+export function germanVerbsUrl(path: string): string {
+  const base = env.apiGermanVerbsUrl
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
 /**
  * Fetch with optional Bearer token. Use this for all Identity Service calls.
  * Attaches Authorization: Bearer <token> when token is provided.

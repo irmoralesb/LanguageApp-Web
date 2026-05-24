@@ -3,7 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 
 export function Header() {
-  const { token, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess, logout } = useAuth()
+  const {
+    token, isAdmin, hasServiceAccess,
+    hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess,
+    hasGermanNounsAccess, hasGermanVerbsAccess, logout,
+  } = useAuth()
+  const [germanOpen, setGermanOpen] = useState(false)
+  const germanRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
@@ -118,6 +124,37 @@ export function Header() {
                 >
                   Chat Practice
                 </Link>
+              )}
+              {(hasGermanNounsAccess || hasGermanVerbsAccess) && (
+                <div className="relative" ref={germanRef}>
+                  <button
+                    type="button"
+                    onClick={() => setGermanOpen((o) => !o)}
+                    className="flex items-center gap-1 rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                  >
+                    German
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {germanOpen && (
+                    <div
+                      className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded border border-slate-600 bg-slate-800 shadow-lg"
+                      onMouseLeave={() => setGermanOpen(false)}
+                    >
+                      {hasGermanNounsAccess && (
+                        <Link to="/german/nouns" className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700" onClick={() => setGermanOpen(false)}>
+                          German Nouns
+                        </Link>
+                      )}
+                      {hasGermanVerbsAccess && (
+                        <Link to="/german/verbs" className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700" onClick={() => setGermanOpen(false)}>
+                          German Verbs
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
               {hasPrepositionsAccess && (
                 <div className="relative" ref={prepositionsRef}>

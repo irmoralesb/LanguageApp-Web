@@ -20,9 +20,12 @@ interface AuthContextValue {
   setToken: (token: string | null) => void;
   logout: () => void;
   isAdmin: boolean;
+  hasServiceAccess: (serviceName: string) => boolean;
   hasPhrasalVerbsAccess: boolean;
   hasPrepositionsAccess: boolean;
   hasChatPracticeAccess: boolean;
+  hasGermanNounsAccess: boolean;
+  hasGermanVerbsAccess: boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -131,6 +134,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return Array.isArray(roles) && roles.length > 0;
   }, [user]);
 
+  const hasGermanNounsAccess = useMemo(() => {
+    const roles = user?.roles?.["german-nouns-service"];
+    return Array.isArray(roles) && roles.length > 0;
+  }, [user]);
+
+  const hasGermanVerbsAccess = useMemo(() => {
+    const roles = user?.roles?.["german-verbs-service"];
+    return Array.isArray(roles) && roles.length > 0;
+  }, [user]);
+
+  const hasServiceAccess = useCallback(
+    (serviceName: string) => {
+      const roles = user?.roles?.[serviceName];
+      return Array.isArray(roles) && roles.length > 0;
+    },
+    [user],
+  );
+
   const value = useMemo<AuthContextValue>(
     () => ({
       token,
@@ -138,11 +159,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken,
       logout,
       isAdmin,
+      hasServiceAccess,
       hasPhrasalVerbsAccess,
       hasPrepositionsAccess,
       hasChatPracticeAccess,
+      hasGermanNounsAccess,
+      hasGermanVerbsAccess,
     }),
-    [token, user, setToken, logout, isAdmin, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess],
+    [token, user, setToken, logout, isAdmin, hasServiceAccess, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess, hasGermanNounsAccess, hasGermanVerbsAccess],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
