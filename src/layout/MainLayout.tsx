@@ -1,13 +1,18 @@
-import { Outlet } from 'react-router-dom'
-import { Header } from '@/layout/Header'
+import { Outlet, useLocation } from 'react-router-dom'
+import { AppShell } from '@/layout/AppShell'
+
+const BARE_PATH_PREFIXES = ['/login', '/design-sketches']
+
+function usesBareLayout(pathname: string): boolean {
+  return BARE_PATH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  )
+}
 
 export function MainLayout() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1 bg-slate-50 p-4 sm:p-6 lg:p-8">
-        <Outlet />
-      </main>
-    </div>
-  )
+  const { pathname } = useLocation()
+  if (usesBareLayout(pathname)) {
+    return <Outlet />
+  }
+  return <AppShell />
 }

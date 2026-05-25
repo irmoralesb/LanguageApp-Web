@@ -53,8 +53,6 @@ export type SketchGermanVerb = {
 export const MOCK_LANGUAGES: SketchLanguage[] = [
   { id: 'en', name: 'English', flag: '🇬🇧', progress: 42, moduleCount: 4 },
   { id: 'de', name: 'Deutsch', flag: '🇩🇪', progress: 11, moduleCount: 2 },
-  { id: 'es', name: 'Spanish', flag: '🇪🇸', progress: 18, moduleCount: 3 },
-  { id: 'fr', name: 'French', flag: '🇫🇷', progress: 0, moduleCount: 3 },
 ]
 
 export const MOCK_MODULES: Record<string, SketchModule[]> = {
@@ -86,94 +84,8 @@ export const MOCK_MODULES: Record<string, SketchModule[]> = {
       completed: 2,
       total: 15,
     },
-    {
-      id: 'listen',
-      title: 'Listening Lab',
-      description: 'Short audio clips with comprehension checks.',
-      duration: '10 min',
-      difficulty: 'Beginner',
-      completed: 0,
-      total: 20,
-    },
   ],
-  de: [
-    {
-      id: 'de-nouns',
-      title: 'Deutsche Nomen',
-      description: 'Artikel, Genus, Plural und Kasusendungen üben.',
-      duration: '14 min',
-      difficulty: 'Beginner',
-      completed: 4,
-      total: 28,
-    },
-    {
-      id: 'de-verbs',
-      title: 'Deutsche Verben',
-      description: 'Konjugationen nach Zeitform, Person und Verbtyp üben.',
-      duration: '16 min',
-      difficulty: 'Intermediate',
-      completed: 2,
-      total: 24,
-    },
-  ],
-  es: [
-    {
-      id: 'verbs',
-      title: 'Core Verbs',
-      description: 'Present tense essentials for daily conversation.',
-      duration: '14 min',
-      difficulty: 'Beginner',
-      completed: 3,
-      total: 25,
-    },
-    {
-      id: 'prep',
-      title: 'Prepositions',
-      description: 'Por vs para and location prepositions.',
-      duration: '12 min',
-      difficulty: 'Intermediate',
-      completed: 0,
-      total: 20,
-    },
-    {
-      id: 'chat',
-      title: 'Chat Practice',
-      description: 'Role-play scenarios in Spanish.',
-      duration: '18 min',
-      difficulty: 'Intermediate',
-      completed: 0,
-      total: 12,
-    },
-  ],
-  fr: [
-    {
-      id: 'verbs',
-      title: 'Core Verbs',
-      description: 'être, avoir, and high-frequency verbs.',
-      duration: '14 min',
-      difficulty: 'Beginner',
-      completed: 0,
-      total: 22,
-    },
-    {
-      id: 'prep',
-      title: 'Prepositions',
-      description: 'à, de, en, and contracted forms.',
-      duration: '11 min',
-      difficulty: 'Beginner',
-      completed: 0,
-      total: 18,
-    },
-    {
-      id: 'chat',
-      title: 'Chat Practice',
-      description: 'Guided dialogue with pronunciation tips.',
-      duration: '16 min',
-      difficulty: 'Intermediate',
-      completed: 0,
-      total: 10,
-    },
-  ],
+  de: [],
 }
 
 export const MOCK_EXERCISE = {

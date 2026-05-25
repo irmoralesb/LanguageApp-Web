@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 import { fetchWithAuth, phrasalVerbsUrl } from '@/api/client'
 import { pvEndpoints } from '@/api/endpoints'
@@ -107,15 +106,7 @@ export function PhrasalVerbsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-800">Phrasal Verbs</h1>
-        <Link
-          to="/"
-          className="text-sm text-slate-600 underline hover:text-slate-800"
-        >
-          Back to Home
-        </Link>
-      </div>
+      <h1 className="mb-6 text-2xl font-semibold text-slate-800">Phrasal Verbs</h1>
 
       {view === 'profile-setup' && (
         <ProfileSetup onProfileCreated={handleProfileCreated} />

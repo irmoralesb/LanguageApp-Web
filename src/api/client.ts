@@ -57,6 +57,24 @@ export function germanVerbsUrl(path: string): string {
 }
 
 /**
+ * Build full URL for a German Nouns Service path.
+ */
+export function germanNounsUrl(path: string): string {
+  const base = env.apiGermanNounsUrl
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
+/**
+ * Build full URL for a German Verbs Service path.
+ */
+export function germanVerbsUrl(path: string): string {
+  const base = env.apiGermanVerbsUrl
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
+/**
  * Fetch with optional Bearer token. Use this for all Identity Service calls.
  * Attaches Authorization: Bearer <token> when token is provided.
  * TODO: In each feature, implement the actual call to the LanguageApp Identity API

@@ -4,8 +4,6 @@ import { SketchShell } from './components/SketchShell'
 import { PhrasalVerbPracticeProposal } from './components/PhrasalVerbPracticeProposal'
 import {
   ChatPracticeProposal,
-  GermanNounsPracticeProposal,
-  GermanVerbsPracticeProposal,
   PrepositionsPracticeProposal,
 } from './components/ExerciseProposals'
 import {
@@ -244,18 +242,6 @@ export function SidebarAppSketch() {
                   compact
                   onBack={() => setUserView('modules')}
                 />
-              ) : module.id === 'de-nouns' ? (
-                <GermanNounsPracticeProposal
-                  accent="blue"
-                  compact
-                  onBack={() => setUserView('modules')}
-                />
-              ) : module.id === 'de-verbs' ? (
-                <GermanVerbsPracticeProposal
-                  accent="blue"
-                  compact
-                  onBack={() => setUserView('modules')}
-                />
               ) : (
                 <PracticeMain
                   language={language}
@@ -350,22 +336,30 @@ function ModulesMain({
       <p className="mt-1 text-slate-600">
         {isGermanSection ? 'Verfügbare Module für diese Sprache.' : 'Modules available for this language.'}
       </p>
-      <div className="mt-6 space-y-2">
-        {modules.map((mod) => (
-          <button
-            key={mod.id}
-            type="button"
-            onClick={() => onSelect(mod)}
-            className="flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-left hover:bg-slate-50"
-          >
-            <div>
-              <p className="font-medium text-slate-900">{mod.title}</p>
-              <p className="text-sm text-slate-500">{mod.description}</p>
-            </div>
-            <span className="text-blue-600">{isGermanSection ? 'Starten' : 'Start'} →</span>
-          </button>
-        ))}
-      </div>
+      {modules.length > 0 ? (
+        <div className="mt-6 space-y-2">
+          {modules.map((mod) => (
+            <button
+              key={mod.id}
+              type="button"
+              onClick={() => onSelect(mod)}
+              className="flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 text-left hover:bg-slate-50"
+            >
+              <div>
+                <p className="font-medium text-slate-900">{mod.title}</p>
+                <p className="text-sm text-slate-500">{mod.description}</p>
+              </div>
+              <span className="text-blue-600">{isGermanSection ? 'Starten' : 'Start'} →</span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-6 rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+          {isGermanSection
+            ? 'Für Deutsch sind noch keine Module verfügbar.'
+            : 'No modules available for this language.'}
+        </p>
+      )}
     </div>
   )
 }

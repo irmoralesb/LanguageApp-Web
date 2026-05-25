@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { ProfileSetup } from './components/ProfileSetup'
 import { PracticeTermSelector } from './components/PracticeTermSelector'
 import { ExerciseView } from './components/ExerciseView'
@@ -44,15 +43,7 @@ export function PrepositionsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-800">Single Preposition</h1>
-        <Link
-          to="/"
-          className="text-sm text-slate-600 underline hover:text-slate-800"
-        >
-          Back to Home
-        </Link>
-      </div>
+      <h1 className="mb-6 text-2xl font-semibold text-slate-800">Single Preposition</h1>
 
       {view === 'profile-setup' && (
         <ProfileSetup onProfileCreated={setProfile} />

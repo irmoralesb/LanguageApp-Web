@@ -26,8 +26,8 @@ export function DesignSketchesPage() {
           tablet, and desktop.
         </p>
         <p className="mt-3 max-w-2xl rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-          Open English or German modules to review exercise-specific proposals for Phrasal Verbs,
-          Prepositions, Chat Practice, German Nouns, and German Verbs.
+          Open English modules to review exercise proposals for Phrasal Verbs, Prepositions, and
+          Chat Practice. German is listed for navigation only (no modules in the live app yet).
         </p>
       </div>
 
@@ -61,8 +61,8 @@ export function DesignSketchesPage() {
       </div>
 
       <p className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        This route is temporary for design review. Once you confirm the sidebar details, I can
-        implement it in the real app.
+        The sidebar shell is also applied to the signed-in app. Use this page to compare or refine
+        the sketch before changing production navigation.
       </p>
     </div>
   )
