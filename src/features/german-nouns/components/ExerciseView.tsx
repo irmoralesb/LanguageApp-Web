@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '@/auth/context/AuthContext'
 import { fetchWithAuth, germanNounsUrl } from '@/api/client'
 import { germanNounsEndpoints } from '@/api/endpoints'
@@ -14,31 +14,27 @@ interface ExerciseViewProps {
   onOpenSelector: () => void
 }
 
+const EXERCISE_MODES: Array<'singular' | 'plural'> = ['singular', 'plural']
+
 export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) {
   const { token } = useAuth()
   const [nouns, setNouns] = useState<GermanNounResponse[]>([])
-  const [selectedId, setSelectedId] = useState('')
-  const [mode, setMode] = useState<'singular' | 'plural'>('singular')
   const [exercise, setExercise] = useState<ExerciseGenerateResponse | null>(null)
-  const [answer, setAnswer] = useState('')
+  const [userAnswer, setUserAnswer] = useState('')
   const [evaluation, setEvaluation] = useState<ExerciseEvaluateResponse | null>(null)
   const [generating, setGenerating] = useState(false)
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [loadingNouns, setLoadingNouns] = useState(true)
 
   const selectedIds = useMemo(() => new Set(selections.map((s) => s.german_noun_id)), [selections])
+  const initialGenerated = useRef(false)
 
-  useEffect(() => {
-    fetchWithAuth(germanNounsUrl(germanNounsEndpoints.catalog.list), { method: 'GET' }, token)
-      .then(async (r) => r.ok && setNouns((await r.json()).filter((n: GermanNounResponse) => selectedIds.has(n.id))))
-      .catch(() => setError('Failed to load nouns.'))
-  }, [token, selectedIds])
-
-  const generate = useCallback(
-    async (nounId: string, exerciseMode: 'singular' | 'plural') => {
+  const generateExercise = useCallback(
+    async (nounId: string, mode: 'singular' | 'plural') => {
       setGenerating(true)
       setExercise(null)
-      setAnswer('')
+      setUserAnswer('')
       setEvaluation(null)
       setError(null)
       try {
@@ -47,17 +43,18 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ german_noun_id: nounId, exercise_mode: exerciseMode }),
+            body: JSON.stringify({ german_noun_id: nounId, exercise_mode: mode }),
           },
           token,
         )
         if (!res.ok) {
-          setError('Failed to generate exercise.')
+          const body = await res.json().catch(() => null)
+          setError(body?.detail ?? 'Failed to generate exercise.')
           return
         }
         setExercise(await res.json())
       } catch {
-        setError('Network error.')
+        setError('Network error generating exercise.')
       } finally {
         setGenerating(false)
       }
@@ -65,9 +62,48 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
     [token],
   )
 
+  const generateRandom = useCallback(
+    (availableNouns: GermanNounResponse[]) => {
+      if (availableNouns.length === 0) return
+      const noun = availableNouns[Math.floor(Math.random() * availableNouns.length)]
+      const mode = EXERCISE_MODES[Math.floor(Math.random() * EXERCISE_MODES.length)]
+      generateExercise(noun.id, mode)
+    },
+    [generateExercise],
+  )
+
+  useEffect(() => {
+    async function loadAndStart() {
+      try {
+        const res = await fetchWithAuth(
+          germanNounsUrl(germanNounsEndpoints.catalog.list),
+          { method: 'GET' },
+          token,
+        )
+        if (!res.ok) {
+          setError('Failed to load nouns.')
+          return
+        }
+        const data: GermanNounResponse[] = await res.json()
+        const filtered = data.filter((n) => selectedIds.has(n.id))
+        setNouns(filtered)
+        if (filtered.length > 0 && !initialGenerated.current) {
+          initialGenerated.current = true
+          generateRandom(filtered)
+        }
+      } catch {
+        setError('Network error loading nouns.')
+      } finally {
+        setLoadingNouns(false)
+      }
+    }
+    loadAndStart()
+  }, [token, selectedIds, generateRandom])
+
   const handleCheck = useCallback(async () => {
-    if (!exercise || !answer.trim()) return
+    if (!exercise || !userAnswer.trim()) return
     setChecking(true)
+    setError(null)
     try {
       const res = await fetchWithAuth(
         germanNounsUrl(germanNounsEndpoints.exercises.evaluate),
@@ -80,77 +116,158 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
             scenario_native: exercise.scenario_native,
             prompt_native: exercise.prompt_native,
             expected_answer: exercise.expected_answer,
-            user_answer: answer.trim(),
+            user_answer: userAnswer.trim(),
           }),
         },
         token,
       )
-      if (res.ok) setEvaluation(await res.json())
+      if (!res.ok) {
+        const body = await res.json().catch(() => null)
+        setError(body?.detail ?? 'Failed to evaluate answer.')
+        return
+      }
+      setEvaluation(await res.json())
+    } catch {
+      setError('Network error checking answer.')
     } finally {
       setChecking(false)
     }
-  }, [exercise, answer, token])
+  }, [exercise, userAnswer, token])
+
+  if (loadingNouns || (generating && !exercise)) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <p className="text-slate-500">
+          {loadingNouns ? 'Loading your nouns...' : 'Generating exercise...'}
+        </p>
+      </div>
+    )
+  }
+
+  if (nouns.length === 0) {
+    return (
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
+        <p className="font-medium">No nouns selected.</p>
+        <button
+          type="button"
+          onClick={onOpenSelector}
+          className="mt-3 rounded-lg bg-slate-800 px-4 py-2 text-sm text-white hover:bg-slate-700"
+        >
+          Select nouns
+        </button>
+      </div>
+    )
+  }
 
   return (
-    <div className="rounded border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-4 flex justify-between">
-        <h2 className="text-lg font-semibold">Practice German nouns</h2>
-        <button type="button" onClick={onOpenSelector} className="text-sm underline">Change selection</button>
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-indigo-700">German Nouns</p>
+          <h2 className="text-xl font-bold text-slate-900">Fill in the article and noun</h2>
+        </div>
+        <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+          {nouns.length} saved noun{nouns.length !== 1 ? 's' : ''} in rotation
+        </div>
       </div>
-      {error && <div className="mb-4 text-sm text-red-700">{error}</div>}
-      <label className="block text-sm font-medium">Noun</label>
-      <select
-        value={selectedId}
-        onChange={(e) => {
-          setSelectedId(e.target.value)
-          if (e.target.value) generate(e.target.value, mode)
-        }}
-        className="mb-4 block w-full rounded border px-3 py-2"
-      >
-        <option value="">Select...</option>
-        {nouns.map((n) => (
-          <option key={n.id} value={n.id}>{n.article_singular} {n.singular}</option>
-        ))}
-      </select>
-      <label className="block text-sm font-medium">Mode</label>
-      <select
-        value={mode}
-        onChange={(e) => {
-          const m = e.target.value as 'singular' | 'plural'
-          setMode(m)
-          if (selectedId) generate(selectedId, m)
-        }}
-        className="mb-4 block w-full rounded border px-3 py-2"
-      >
-        <option value="singular">Singular with article</option>
-        <option value="plural">Plural with article</option>
-      </select>
-      {generating && <p>Generating...</p>}
+
+      {error && (
+        <div className="mb-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {generating && <p className="text-sm text-slate-500">Generating exercise...</p>}
+
       {exercise && !generating && (
         <>
-          <p className="mb-2 rounded bg-slate-50 p-3">{exercise.prompt_native}</p>
-          <textarea
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            disabled={!!evaluation}
-            rows={2}
-            placeholder="Write in German (e.g. der Hund)"
-            className="mb-4 w-full rounded border px-3 py-2"
-          />
-          {!evaluation && (
-            <button type="button" onClick={handleCheck} disabled={checking} className="rounded bg-slate-700 px-4 py-2 text-white">
-              {checking ? 'Checking...' : 'Check'}
-            </button>
-          )}
-          {evaluation && (
-            <div className={`rounded p-4 ${evaluation.is_correct ? 'bg-green-50' : 'bg-amber-50'}`}>
-              <p className="font-semibold">{evaluation.is_correct ? 'Correct' : 'Incorrect'}</p>
-              <p className="text-sm">{evaluation.feedback}</p>
-              <button type="button" className="mt-3 text-sm underline" onClick={() => selectedId && generate(selectedId, mode)}>
-                Next exercise
-              </button>
+          {exercise.scenario_native && (
+            <div className="mb-5 rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-700 opacity-70">
+                Scenario
+              </p>
+              <p className="text-sm text-indigo-900">{exercise.scenario_native}</p>
             </div>
           )}
+
+          <div className="rounded-xl bg-slate-50 p-4">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Prompt
+            </p>
+            <p className="text-lg font-medium text-slate-900">{exercise.prompt_native}</p>
+          </div>
+
+          <label
+            htmlFor="noun-user-answer"
+            className="mb-1 mt-5 block text-sm font-medium text-slate-700"
+          >
+            Your answer in German (e.g. der Hund / die Hunde)
+          </label>
+          <textarea
+            id="noun-user-answer"
+            value={userAnswer}
+            onChange={(e) => setUserAnswer(e.target.value)}
+            disabled={!!evaluation}
+            rows={3}
+            placeholder="Type your answer here..."
+            className="block w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 placeholder-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 disabled:bg-slate-50"
+          />
+
+          <div className="mt-4 flex justify-end">
+            {!evaluation && (
+              <button
+                type="button"
+                onClick={handleCheck}
+                disabled={!userAnswer.trim() || checking}
+                className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {checking ? 'Checking...' : 'Check'}
+              </button>
+            )}
+          </div>
+
+          {evaluation && (
+            <div
+              className={`mt-5 rounded-xl border p-4 ${
+                evaluation.is_correct
+                  ? 'border-emerald-200 bg-emerald-50'
+                  : 'border-amber-300 bg-amber-50'
+              }`}
+            >
+              <p
+                className={`mb-2 text-sm font-semibold ${
+                  evaluation.is_correct ? 'text-emerald-700' : 'text-amber-800'
+                }`}
+              >
+                {evaluation.is_correct ? 'Correct!' : 'Not yet'}
+              </p>
+              <p className="text-sm text-slate-700">{evaluation.feedback}</p>
+              {!evaluation.is_correct && evaluation.correct_example && (
+                <div className="mt-3 rounded-lg bg-white p-3 text-sm text-slate-700">
+                  <span className="font-medium">Correct answer:</span> {evaluation.correct_example}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-6 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between">
+            <button
+              type="button"
+              onClick={onOpenSelector}
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Change saved nouns
+            </button>
+            {evaluation && (
+              <button
+                type="button"
+                onClick={() => generateRandom(nouns)}
+                className="rounded-lg bg-indigo-600 px-5 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+              >
+                New exercise
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>
