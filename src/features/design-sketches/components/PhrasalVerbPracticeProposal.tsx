@@ -50,11 +50,33 @@ export function PhrasalVerbPracticeProposal({
   const [attempt, setAttempt] = useState<1 | 2>(1)
   const [showHint, setShowHint] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [expandedDefinitionIds, setExpandedDefinitionIds] = useState<Set<string>>(new Set())
+  const [customVerbs, setCustomVerbs] = useState<SketchPhrasalVerb[]>([])
+  const [addingVerb, setAddingVerb] = useState(false)
+  const [newVerbText, setNewVerbText] = useState('')
+  const [newVerbDefinition, setNewVerbDefinition] = useState('')
+
+  const catalogVerbs = useMemo(
+    () => [...MOCK_PHRASAL_VERBS, ...customVerbs],
+    [customVerbs],
+  )
 
   const selectedVerbs = useMemo(
-    () => MOCK_PHRASAL_VERBS.filter((verb) => selectedIds.has(verb.id)),
-    [selectedIds],
+    () => catalogVerbs.filter((verb) => selectedIds.has(verb.id)),
+    [catalogVerbs, selectedIds],
   )
+
+  const filteredVerbs = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase()
+    if (!normalizedSearch) return catalogVerbs
+
+    return catalogVerbs.filter((verb) =>
+      [verb.text, verb.definition, verb.strength].some((value) =>
+        value.toLowerCase().includes(normalizedSearch),
+      ),
+    )
+  }, [catalogVerbs, searchTerm])
 
   const toggleVerb = (verb: SketchPhrasalVerb) => {
     setSelectedIds((current) => {
@@ -66,6 +88,39 @@ export function PhrasalVerbPracticeProposal({
       }
       return next
     })
+  }
+
+  const toggleDefinition = (verbId: string) => {
+    setExpandedDefinitionIds((current) => {
+      const next = new Set(current)
+      if (next.has(verbId)) {
+        next.delete(verbId)
+      } else {
+        next.add(verbId)
+      }
+      return next
+    })
+  }
+
+  const addCustomVerb = () => {
+    const text = newVerbText.trim().toLowerCase()
+    const definition = newVerbDefinition.trim()
+    if (!text || !definition) return
+
+    const id = `custom-${text.replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`
+    const newVerb: SketchPhrasalVerb = {
+      id,
+      text,
+      definition,
+      example: '',
+      strength: 'New',
+    }
+
+    setCustomVerbs((current) => [...current, newVerb])
+    setSelectedIds((current) => new Set(current).add(id))
+    setNewVerbText('')
+    setNewVerbDefinition('')
+    setAddingVerb(false)
   }
 
   const startExercise = () => {
@@ -231,49 +286,143 @@ export function PhrasalVerbPracticeProposal({
             </p>
           </div>
 
-          <div className="mb-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setSelectedIds(new Set(MOCK_PHRASAL_VERBS.map((verb) => verb.id)))}
-              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
-            >
-              Select all
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedIds(new Set())}
-              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
-            >
-              Clear
-            </button>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
-              Auto-saved after every change
-            </span>
+          <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <label className="min-w-0 flex-1 text-sm font-medium text-slate-700">
+              Search phrasal verbs
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search by verb, definition, or strength..."
+                className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+              />
+            </label>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedIds(new Set(catalogVerbs.map((verb) => verb.id)))}
+                className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
+              >
+                Select all
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedIds(new Set())}
+                className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
+              >
+                Clear
+              </button>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
+                Auto-saved after every change
+              </span>
+              <button
+                type="button"
+                onClick={() => setAddingVerb((value) => !value)}
+                className={`rounded-full px-3 py-1 text-xs font-medium text-white ${styles.button}`}
+              >
+                {addingVerb ? 'Cancel add' : 'Add phrasal verb'}
+              </button>
+            </div>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
-            {MOCK_PHRASAL_VERBS.map((verb) => {
-              const isSelected = selectedIds.has(verb.id)
-              return (
+          {addingVerb && (
+            <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="grid gap-3 lg:grid-cols-[16rem_minmax(0,1fr)_auto] lg:items-end">
+                <label className="text-sm font-medium text-slate-700">
+                  Phrasal verb
+                  <input
+                    type="text"
+                    value={newVerbText}
+                    onChange={(event) => setNewVerbText(event.target.value)}
+                    placeholder="e.g. carry on"
+                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="text-sm font-medium text-slate-700">
+                  Definition
+                  <input
+                    type="text"
+                    value={newVerbDefinition}
+                    onChange={(event) => setNewVerbDefinition(event.target.value)}
+                    placeholder="Short meaning shown when expanded"
+                    className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                </label>
                 <button
-                  key={verb.id}
                   type="button"
-                  onClick={() => toggleVerb(verb)}
-                  className={`rounded-xl border p-4 text-left transition ${
-                    isSelected ? styles.ring : 'border-slate-200 hover:border-slate-300'
-                  }`}
+                  onClick={addCustomVerb}
+                  disabled={!newVerbText.trim() || !newVerbDefinition.trim()}
+                  className={`rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50 ${styles.button}`}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold text-slate-900">{verb.text}</p>
-                    <span className="rounded-full bg-white px-2 py-0.5 text-xs text-slate-500">
-                      {verb.strength}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm text-slate-600">{verb.definition}</p>
-                  <p className="mt-2 text-xs text-slate-400">{verb.example}</p>
+                  Add
                 </button>
-              )
-            })}
+              </div>
+              <p className="mt-2 text-xs text-slate-500">
+                Sketch behavior: new catalog entries are added locally and selected automatically.
+              </p>
+            </div>
+          )}
+
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <span>
+              Showing {filteredVerbs.length} of {catalogVerbs.length} phrasal verbs
+            </span>
+            <span>{selectedVerbs.length} selected</span>
+          </div>
+
+          <div className="max-h-[32rem] overflow-y-auto rounded-xl border border-slate-200 bg-white">
+            {filteredVerbs.length === 0 ? (
+              <div className="px-4 py-8 text-center text-sm text-slate-500">
+                No phrasal verbs match your search.
+              </div>
+            ) : (
+              <ul className="divide-y divide-slate-100">
+                {filteredVerbs.map((verb) => {
+                  const isSelected = selectedIds.has(verb.id)
+                  const isExpanded = expandedDefinitionIds.has(verb.id)
+                  return (
+                    <li
+                      key={verb.id}
+                      className={`transition ${
+                        isSelected ? styles.ring : 'border-transparent hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 px-3 py-2">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleVerb(verb)}
+                          className="h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                          aria-label={`Select ${verb.text}`}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-semibold text-slate-900">{verb.text}</p>
+                            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                              {verb.strength}
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleDefinition(verb.id)}
+                          className="shrink-0 rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-white"
+                          aria-expanded={isExpanded}
+                        >
+                          {isExpanded ? 'Hide' : 'Definition'}
+                        </button>
+                      </div>
+
+                      {isExpanded && (
+                        <div className="border-t border-slate-100 bg-white/70 px-10 pb-3 pt-2 text-sm text-slate-600">
+                          {verb.definition}
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
           </div>
         </div>
 

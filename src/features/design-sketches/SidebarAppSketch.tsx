@@ -340,12 +340,16 @@ function ModulesMain({
   modules: SketchModule[]
   onSelect: (mod: SketchModule) => void
 }) {
+  const isGermanSection = language.id === 'de'
+
   return (
     <div>
       <h2 className="text-xl font-bold text-slate-900">
         {language.flag} {language.name}
       </h2>
-      <p className="mt-1 text-slate-600">Modules available for this language.</p>
+      <p className="mt-1 text-slate-600">
+        {isGermanSection ? 'Verfügbare Module für diese Sprache.' : 'Modules available for this language.'}
+      </p>
       <div className="mt-6 space-y-2">
         {modules.map((mod) => (
           <button
@@ -358,7 +362,7 @@ function ModulesMain({
               <p className="font-medium text-slate-900">{mod.title}</p>
               <p className="text-sm text-slate-500">{mod.description}</p>
             </div>
-            <span className="text-blue-600">Start →</span>
+            <span className="text-blue-600">{isGermanSection ? 'Starten' : 'Start'} →</span>
           </button>
         ))}
       </div>

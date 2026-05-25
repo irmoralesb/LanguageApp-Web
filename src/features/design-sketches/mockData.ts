@@ -52,7 +52,7 @@ export type SketchGermanVerb = {
 
 export const MOCK_LANGUAGES: SketchLanguage[] = [
   { id: 'en', name: 'English', flag: '🇬🇧', progress: 42, moduleCount: 4 },
-  { id: 'de', name: 'German', flag: '🇩🇪', progress: 11, moduleCount: 2 },
+  { id: 'de', name: 'Deutsch', flag: '🇩🇪', progress: 11, moduleCount: 2 },
   { id: 'es', name: 'Spanish', flag: '🇪🇸', progress: 18, moduleCount: 3 },
   { id: 'fr', name: 'French', flag: '🇫🇷', progress: 0, moduleCount: 3 },
 ]
@@ -99,8 +99,8 @@ export const MOCK_MODULES: Record<string, SketchModule[]> = {
   de: [
     {
       id: 'de-nouns',
-      title: 'German Nouns',
-      description: 'Practice article, gender, plural, and case endings.',
+      title: 'Deutsche Nomen',
+      description: 'Artikel, Genus, Plural und Kasusendungen üben.',
       duration: '14 min',
       difficulty: 'Beginner',
       completed: 4,
@@ -108,8 +108,8 @@ export const MOCK_MODULES: Record<string, SketchModule[]> = {
     },
     {
       id: 'de-verbs',
-      title: 'German Verbs',
-      description: 'Drill conjugations by tense, person, and verb type.',
+      title: 'Deutsche Verben',
+      description: 'Konjugationen nach Zeitform, Person und Verbtyp üben.',
       duration: '16 min',
       difficulty: 'Intermediate',
       completed: 2,
