@@ -17,43 +17,55 @@ export function identityUrl(path: string): string {
   return base ? `${base}${normalized}` : ''
 }
 
+function resolveEnglishBaseUrl(): string {
+  return (
+    env.apiEnglishUrl ||
+    env.apiPhrasalVerbsUrl ||
+    env.apiPrepositionsUrl ||
+    env.apiChatPracticeUrl ||
+    ''
+  )
+}
+
+export function englishUrl(path: string): string {
+  const base = resolveEnglishBaseUrl()
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return base ? `${base}${normalized}` : ''
+}
+
 /**
  * Build full URL for a Phrasal Verbs Service path.
  */
 export function phrasalVerbsUrl(path: string): string {
-  const base = env.apiPhrasalVerbsUrl
-  const normalized = path.startsWith('/') ? path : `/${path}`
-  return base ? `${base}${normalized}` : ''
+  return englishUrl(path)
 }
 
 /**
  * Build full URL for a Prepositions Service path.
  */
 export function prepositionsUrl(path: string): string {
-  const base = env.apiPrepositionsUrl
-  const normalized = path.startsWith('/') ? path : `/${path}`
-  return base ? `${base}${normalized}` : ''
+  return englishUrl(path)
 }
 
 /**
  * Build full URL for a Chat Practice Service path.
  */
 export function chatPracticeUrl(path: string): string {
-  const base = env.apiChatPracticeUrl
-  const normalized = path.startsWith('/') ? path : `/${path}`
-  return base ? `${base}${normalized}` : ''
+  return englishUrl(path)
 }
 
 export function germanNounsUrl(path: string): string {
-  const base = env.apiGermanNounsUrl
+  return deutschUrl(path)
+}
+
+export function deutschUrl(path: string): string {
+  const base = env.apiDeutschUrl
   const normalized = path.startsWith('/') ? path : `/${path}`
   return base ? `${base}${normalized}` : ''
 }
 
 export function germanVerbsUrl(path: string): string {
-  const base = env.apiGermanVerbsUrl
-  const normalized = path.startsWith('/') ? path : `/${path}`
-  return base ? `${base}${normalized}` : ''
+  return deutschUrl(path)
 }
 
 /**

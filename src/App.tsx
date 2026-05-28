@@ -73,12 +73,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Phrasal Verbs */}
+        {/* English exercises */}
         <Route
           path="/phrasal-verbs"
           element={
             <ProtectedRoute>
-              <PhrasalVerbsPage />
+              <ServiceAccessRoute serviceName="english-service">
+                <PhrasalVerbsPage />
+              </ServiceAccessRoute>
             </ProtectedRoute>
           }
         />
@@ -86,7 +88,9 @@ function App() {
           path="/prepositions"
           element={
             <ProtectedRoute>
-              <PrepositionsPage />
+              <ServiceAccessRoute serviceName="english-service">
+                <PrepositionsPage />
+              </ServiceAccessRoute>
             </ProtectedRoute>
           }
         />
@@ -94,7 +98,9 @@ function App() {
           path="/prepositions/multiple"
           element={
             <ProtectedRoute>
-              <MultiplePrepositionsPage />
+              <ServiceAccessRoute serviceName="english-service">
+                <MultiplePrepositionsPage />
+              </ServiceAccessRoute>
             </ProtectedRoute>
           }
         />
@@ -103,7 +109,7 @@ function App() {
           path="/chat-practice"
           element={
             <ProtectedRoute>
-              <ServiceAccessRoute serviceName="chat-practice-service">
+              <ServiceAccessRoute serviceName="english-service">
                 <ChatPracticePage />
               </ServiceAccessRoute>
             </ProtectedRoute>
@@ -114,7 +120,7 @@ function App() {
           path="/german/nouns"
           element={
             <ProtectedRoute>
-              <ServiceAccessRoute serviceName="german-nouns-service">
+              <ServiceAccessRoute serviceName="deutsch-service">
                 <GermanNounsPage />
               </ServiceAccessRoute>
             </ProtectedRoute>
@@ -124,7 +130,7 @@ function App() {
           path="/german/verbs"
           element={
             <ProtectedRoute>
-              <ServiceAccessRoute serviceName="german-verbs-service">
+              <ServiceAccessRoute serviceName="deutsch-service">
                 <GermanVerbsPage />
               </ServiceAccessRoute>
             </ProtectedRoute>
