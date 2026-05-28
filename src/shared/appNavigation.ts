@@ -12,9 +12,7 @@ export const APP_LANGUAGES: AppLanguage[] = [
 ]
 
 export type ModuleAccess =
-  | 'phrasalVerbs'
-  | 'prepositions'
-  | 'chatPractice'
+  | 'english'
   | 'germanNouns'
   | 'germanVerbs'
 
@@ -34,7 +32,7 @@ export const APP_MODULES: AppModule[] = [
     description: 'Master common verb + particle combinations.',
     path: '/phrasal-verbs',
     languageId: 'en',
-    access: 'phrasalVerbs',
+    access: 'english',
   },
   {
     id: 'prep-single',
@@ -42,7 +40,7 @@ export const APP_MODULES: AppModule[] = [
     description: 'Practice one preposition at a time.',
     path: '/prepositions',
     languageId: 'en',
-    access: 'prepositions',
+    access: 'english',
   },
   {
     id: 'prep-multiple',
@@ -50,7 +48,7 @@ export const APP_MODULES: AppModule[] = [
     description: 'Choose the correct preposition in context.',
     path: '/prepositions/multiple',
     languageId: 'en',
-    access: 'prepositions',
+    access: 'english',
   },
   {
     id: 'chat',
@@ -58,7 +56,7 @@ export const APP_MODULES: AppModule[] = [
     description: 'Conversational drills with instant feedback.',
     path: '/chat-practice',
     languageId: 'en',
-    access: 'chatPractice',
+    access: 'english',
   },
   {
     id: 'german-nouns',
@@ -79,18 +77,14 @@ export const APP_MODULES: AppModule[] = [
 ]
 
 export type ModuleAccessFlags = {
-  hasPhrasalVerbsAccess: boolean
-  hasPrepositionsAccess: boolean
-  hasChatPracticeAccess: boolean
+  hasEnglishAccess: boolean
   hasGermanNounsAccess: boolean
   hasGermanVerbsAccess: boolean
 }
 
 function hasModuleAccess(module: AppModule, access: ModuleAccessFlags): boolean {
   if (!module.access) return true
-  if (module.access === 'phrasalVerbs') return access.hasPhrasalVerbsAccess
-  if (module.access === 'prepositions') return access.hasPrepositionsAccess
-  if (module.access === 'chatPractice') return access.hasChatPracticeAccess
+  if (module.access === 'english') return access.hasEnglishAccess
   if (module.access === 'germanNouns') return access.hasGermanNounsAccess
   if (module.access === 'germanVerbs') return access.hasGermanVerbsAccess
   return false

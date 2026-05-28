@@ -21,6 +21,7 @@ interface AuthContextValue {
   logout: () => void;
   isAdmin: boolean;
   hasServiceAccess: (serviceName: string) => boolean;
+  hasEnglishAccess: boolean;
   hasPhrasalVerbsAccess: boolean;
   hasPrepositionsAccess: boolean;
   hasChatPracticeAccess: boolean;
@@ -120,28 +121,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const hasPhrasalVerbsAccess = useMemo(() => {
-    const roles = user?.roles?.["phrasalverbs-service"];
+    const roles = user?.roles?.["english-service"];
     return Array.isArray(roles) && roles.length > 0;
   }, [user]);
 
   const hasPrepositionsAccess = useMemo(() => {
-    const roles = user?.roles?.["prepositions-service"];
+    const roles = user?.roles?.["english-service"];
     return Array.isArray(roles) && roles.length > 0;
   }, [user]);
 
   const hasChatPracticeAccess = useMemo(() => {
-    const roles = user?.roles?.["chat-practice-service"];
+    const roles = user?.roles?.["english-service"];
+    return Array.isArray(roles) && roles.length > 0;
+  }, [user]);
+
+  const hasEnglishAccess = useMemo(() => {
+    const roles = user?.roles?.["english-service"];
     return Array.isArray(roles) && roles.length > 0;
   }, [user]);
 
   const hasGermanNounsAccess = useMemo(() => {
-    const roles = user?.roles?.["german-nouns-service"];
-    return Array.isArray(roles) && roles.length > 0;
+    const roles = user?.roles?.["deutsch-service"];
+    return Array.isArray(roles) && roles.includes("deutsch-user");
   }, [user]);
 
   const hasGermanVerbsAccess = useMemo(() => {
-    const roles = user?.roles?.["german-verbs-service"];
-    return Array.isArray(roles) && roles.length > 0;
+    const roles = user?.roles?.["deutsch-service"];
+    return Array.isArray(roles) && roles.includes("deutsch-user");
   }, [user]);
 
   const hasServiceAccess = useCallback(
@@ -160,13 +166,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       isAdmin,
       hasServiceAccess,
+      hasEnglishAccess,
       hasPhrasalVerbsAccess,
       hasPrepositionsAccess,
       hasChatPracticeAccess,
       hasGermanNounsAccess,
       hasGermanVerbsAccess,
     }),
-    [token, user, setToken, logout, isAdmin, hasServiceAccess, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess, hasGermanNounsAccess, hasGermanVerbsAccess],
+    [token, user, setToken, logout, isAdmin, hasServiceAccess, hasEnglishAccess, hasPhrasalVerbsAccess, hasPrepositionsAccess, hasChatPracticeAccess, hasGermanNounsAccess, hasGermanVerbsAccess],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

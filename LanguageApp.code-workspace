@@ -23,6 +23,12 @@
 		},
 		{
 			"path": "../LanguageApp-GermanVerbsSvc"
+		},
+		{
+			"path": "../LanguageApp-EnglishSvc"
+		},
+		{
+			"path": "../LanguageApp-DeutschSvc"
 		}
 	],
 	"settings": {

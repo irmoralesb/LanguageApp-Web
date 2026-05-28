@@ -25,6 +25,7 @@ export function AppShell() {
   const {
     user,
     isAdmin,
+    hasEnglishAccess,
     hasPhrasalVerbsAccess,
     hasPrepositionsAccess,
     hasChatPracticeAccess,
@@ -47,6 +48,7 @@ export function AppShell() {
 
   const accessFlags = useMemo(
     () => ({
+      hasEnglishAccess,
       hasPhrasalVerbsAccess,
       hasPrepositionsAccess,
       hasChatPracticeAccess,
@@ -54,6 +56,7 @@ export function AppShell() {
       hasGermanVerbsAccess,
     }),
     [
+      hasEnglishAccess,
       hasPhrasalVerbsAccess,
       hasPrepositionsAccess,
       hasChatPracticeAccess,

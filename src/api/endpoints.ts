@@ -66,17 +66,20 @@ export const pvEndpoints = {
     get: '/api/v1/profile',
     create: '/api/v1/profile',
     update: '/api/v1/profile',
-    selections: '/api/v1/profile/phrasal-verbs',
-    addSelection: '/api/v1/profile/phrasal-verbs',
-    removeSelection: (phrasalVerbId: string) => `/api/v1/profile/phrasal-verbs/${phrasalVerbId}`,
+    selections: '/api/v1/phrasal-verbs/profile/phrasal-verbs',
+    addSelection: '/api/v1/phrasal-verbs/profile/phrasal-verbs',
+    removeSelection: (phrasalVerbId: string) =>
+      `/api/v1/phrasal-verbs/profile/phrasal-verbs/${phrasalVerbId}`,
   },
   languages: {
     native: '/api/v1/languages/native',
     target: '/api/v1/languages/target',
   },
   exercises: {
-    generate: '/api/v1/exercises/generate',
-    evaluate: '/api/v1/exercises/evaluate',
+    generate: '/api/v1/phrasal-verbs/exercises/generate',
+    evaluate: '/api/v1/phrasal-verbs/exercises/evaluate',
+    history: '/api/v1/phrasal-verbs/exercises/history',
+    stats: '/api/v1/phrasal-verbs/exercises/stats',
   },
 } as const
 
@@ -101,28 +104,31 @@ export const chatPracticeEndpoints = {
  */
 export const prepEndpoints = {
   practiceTerms: {
-    catalog: '/api/v1/practice-terms/catalog',
-    byId: (id: string) => `/api/v1/practice-terms/${id}`,
+    catalog: '/api/v1/prepositions/practice-terms/catalog',
+    byId: (id: string) => `/api/v1/prepositions/practice-terms/${id}`,
   },
   profile: {
     get: '/api/v1/profile',
     create: '/api/v1/profile',
     update: '/api/v1/profile',
-    selections: '/api/v1/profile/practice-terms',
-    addSelection: '/api/v1/profile/practice-terms',
-    removeSelection: (practiceTermId: string) => `/api/v1/profile/practice-terms/${practiceTermId}`,
+    selections: '/api/v1/prepositions/profile/practice-terms',
+    addSelection: '/api/v1/prepositions/profile/practice-terms',
+    removeSelection: (practiceTermId: string) =>
+      `/api/v1/prepositions/profile/practice-terms/${practiceTermId}`,
   },
   languages: {
     native: '/api/v1/languages/native',
     target: '/api/v1/languages/target',
   },
   exercises: {
-    generate: '/api/v1/exercises/generate',
-    evaluate: '/api/v1/exercises/evaluate',
+    generate: '/api/v1/prepositions/exercises/generate',
+    evaluate: '/api/v1/prepositions/exercises/evaluate',
+    history: '/api/v1/prepositions/exercises/history',
+    stats: '/api/v1/prepositions/exercises/stats',
     multiplePrepositions: {
-      generate: '/api/v1/exercises/multiple-prepositions/generate',
-      evaluate: '/api/v1/exercises/multiple-prepositions/evaluate',
-      history: '/api/v1/exercises/multiple-prepositions/history',
+      generate: '/api/v1/prepositions/exercises/multiple-prepositions/generate',
+      evaluate: '/api/v1/prepositions/exercises/multiple-prepositions/evaluate',
+      history: '/api/v1/prepositions/exercises/multiple-prepositions/history',
     },
   },
 } as const
@@ -145,8 +151,8 @@ export const germanNounsEndpoints = {
     target: '/api/v1/languages/target',
   },
   exercises: {
-    generate: '/api/v1/exercises/generate',
-    evaluate: '/api/v1/exercises/evaluate',
+    generate: '/api/v1/exercises/nouns/generate',
+    evaluate: '/api/v1/exercises/nouns/evaluate',
   },
 } as const
 
@@ -168,7 +174,7 @@ export const germanVerbsEndpoints = {
     target: '/api/v1/languages/target',
   },
   exercises: {
-    generate: '/api/v1/exercises/generate',
-    evaluate: '/api/v1/exercises/evaluate',
+    generate: '/api/v1/exercises/verbs/generate',
+    evaluate: '/api/v1/exercises/verbs/evaluate',
   },
 } as const
