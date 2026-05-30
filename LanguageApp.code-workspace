@@ -7,22 +7,7 @@
 			"path": "../LanguageApp-IdentitySvc"
 		},
 		{
-			"path": "../LanguageApp-PhrasalVerbsSvc"
-		},
-		{
-			"path": "../LanguageApp-PrepositionsSvc"
-		},
-		{
 			"path": "../LanguageApp-Scripts"
-		},
-		{
-			"path": "../LanguageApp-ChatPractice"
-		},
-		{
-			"path": "../LanguageApp-GermanNounsSvc"
-		},
-		{
-			"path": "../LanguageApp-GermanVerbsSvc"
 		},
 		{
 			"path": "../LanguageApp-EnglishSvc"
