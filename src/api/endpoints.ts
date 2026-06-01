@@ -130,6 +130,12 @@ export const prepEndpoints = {
       evaluate: '/api/v1/prepositions/exercises/multiple-prepositions/evaluate',
       history: '/api/v1/prepositions/exercises/multiple-prepositions/history',
     },
+    prepositionChoice: {
+      generate: '/api/v1/prepositions/exercises/preposition-choice/generate',
+      evaluate: '/api/v1/prepositions/exercises/preposition-choice/evaluate',
+      history: '/api/v1/prepositions/exercises/preposition-choice/history',
+      stats: '/api/v1/prepositions/exercises/preposition-choice/stats',
+    },
   },
 } as const
 

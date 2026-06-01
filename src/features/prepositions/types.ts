@@ -77,3 +77,26 @@ export interface MultiplePrepositionsEvaluationResponse {
   attempt_number: number
   correct_sentence_target: string | null
 }
+
+export interface PrepositionChoiceExercisePromptResponse {
+  option_a: string
+  option_b: string
+  target_language_code: string
+  scenario_native: string
+  sentence_with_blank: string
+  prompt_token: string
+}
+
+export interface PrepositionChoiceEvaluationResponse {
+  is_correct: boolean
+  feedback: string
+  correct_preposition: string | null
+  sentence_complete: string | null
+}
+
+export interface PrepositionChoicePairStatsResponse {
+  option_a: string
+  option_b: string
+  correct_count: number
+  incorrect_count: number
+}

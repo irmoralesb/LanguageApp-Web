@@ -13,6 +13,7 @@ import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
 import { MultiplePrepositionsPage } from '@/features/prepositions/MultiplePrepositionsPage'
+import { PrepositionChoicePage } from '@/features/prepositions/PrepositionChoicePage'
 import { ChatPracticePage } from '@/features/chat-practice/ChatPracticePage'
 import { GermanNounsPage } from '@/features/german-nouns/GermanNounsPage'
 import { GermanVerbsPage } from '@/features/german-verbs/GermanVerbsPage'
@@ -100,6 +101,16 @@ function App() {
             <ProtectedRoute>
               <ServiceAccessRoute serviceName="english-service">
                 <MultiplePrepositionsPage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/prepositions/choice"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="english-service">
+                <PrepositionChoicePage />
               </ServiceAccessRoute>
             </ProtectedRoute>
           }

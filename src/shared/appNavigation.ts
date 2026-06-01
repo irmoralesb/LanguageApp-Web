@@ -51,6 +51,14 @@ export const APP_MODULES: AppModule[] = [
     access: 'english',
   },
   {
+    id: 'prep-choice',
+    title: 'Similar Prepositions',
+    description: 'Pick between easily confused prepositions such as in vs into.',
+    path: '/prepositions/choice',
+    languageId: 'en',
+    access: 'english',
+  },
+  {
     id: 'chat',
     title: 'Chat Practice',
     description: 'Conversational drills with instant feedback.',
