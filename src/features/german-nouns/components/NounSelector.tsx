@@ -268,15 +268,15 @@ export function NounSelector({ selections, onSelectionsUpdated, onStartPracticin
       <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <h3 className="font-semibold text-slate-900">Practice options</h3>
         <p className="mt-2 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-sm text-indigo-900">
-          {selections.length} noun{selections.length !== 1 ? 's' : ''} selected. Selection remains available next session.
+          {selections.length} noun{selections.length !== 1 ? 's' : ''} selected. The gender exercise uses the catalog and
+          prioritizes nouns you miss.
         </p>
         <button
           type="button"
           onClick={onStartPracticing}
-          disabled={selections.length === 0}
           className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Start practice
+          Start gender practice
         </button>
       </aside>
     </div>

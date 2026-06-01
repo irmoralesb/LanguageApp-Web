@@ -32,6 +32,27 @@ export interface GermanNounSelectionResponse {
   added_at: string
 }
 
+export type GermanNounGenderArticle = 'der' | 'die' | 'das'
+
+export interface NounGenderExerciseItem {
+  german_noun_id: string
+  singular: string
+  definition: string
+  incorrect_attempts: number
+  correct_attempts: number
+}
+
+export interface NounGenderExerciseGenerateResponse {
+  target_score: number
+  nouns: NounGenderExerciseItem[]
+}
+
+export interface NounGenderExerciseEvaluateResponse {
+  is_correct: boolean
+  correct_article: GermanNounGenderArticle
+  feedback: string
+}
+
 export interface ExerciseGenerateResponse {
   german_noun_id: string
   target_language_code: string

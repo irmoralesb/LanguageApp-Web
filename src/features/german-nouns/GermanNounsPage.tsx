@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ProfileSetup } from './components/ProfileSetup'
 import { NounSelector } from './components/NounSelector'
-import { ExerciseView } from './components/ExerciseView'
+import { GenderExerciseView } from './components/GenderExerciseView'
 import { useGermanNounsGate } from './hooks/useGermanNounsGate'
 
 export function GermanNounsPage() {
@@ -38,7 +38,7 @@ export function GermanNounsPage() {
         <NounSelector selections={selections} onSelectionsUpdated={setSelections} onStartPracticing={showReady} />
       )}
       {view === 'ready' && profile && (
-        <ExerciseView selections={selections} onOpenSelector={showSelection} />
+        <GenderExerciseView onOpenSelector={showSelection} />
       )}
     </div>
   )
