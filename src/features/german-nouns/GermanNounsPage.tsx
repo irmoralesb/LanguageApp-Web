@@ -1,12 +1,21 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ProfileSetup } from './components/ProfileSetup'
 import { NounSelector } from './components/NounSelector'
 import { GenderExerciseView } from './components/GenderExerciseView'
+import { CasesExerciseView } from './components/CasesExerciseView'
 import { useGermanNounsGate } from './hooks/useGermanNounsGate'
+import type { GermanGrammaticalCase } from './types'
+
+export type GermanNounsExerciseMode = 'gender' | 'cases'
+
+const DEFAULT_PRACTICE_CASES: GermanGrammaticalCase[] = ['nominativ', 'akkusativ', 'dativ']
 
 export function GermanNounsPage() {
   const { view, profile, selections, error, refresh, setProfile, setSelections, showSelection, showReady } =
     useGermanNounsGate()
+  const [exerciseMode, setExerciseMode] = useState<GermanNounsExerciseMode>('gender')
+  const [practiceCases, setPracticeCases] = useState<GermanGrammaticalCase[]>(DEFAULT_PRACTICE_CASES)
 
   if (error) {
     return (
@@ -35,10 +44,30 @@ export function GermanNounsPage() {
       </div>
       {view === 'profile-setup' && <ProfileSetup onProfileCreated={setProfile} />}
       {view === 'selection' && (
-        <NounSelector selections={selections} onSelectionsUpdated={setSelections} onStartPracticing={showReady} />
+        <NounSelector
+          selections={selections}
+          onSelectionsUpdated={setSelections}
+          practiceCases={practiceCases}
+          onPracticeCasesChange={setPracticeCases}
+          onStartGenderPractice={() => {
+            setExerciseMode('gender')
+            showReady()
+          }}
+          onStartCasesPractice={() => {
+            setExerciseMode('cases')
+            showReady()
+          }}
+        />
       )}
-      {view === 'ready' && profile && (
+      {view === 'ready' && profile && exerciseMode === 'gender' && (
         <GenderExerciseView onOpenSelector={showSelection} />
+      )}
+      {view === 'ready' && profile && exerciseMode === 'cases' && (
+        <CasesExerciseView
+          selections={selections}
+          practiceCases={practiceCases}
+          onOpenSelector={showSelection}
+        />
       )}
     </div>
   )

@@ -2,15 +2,36 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/auth/context/AuthContext'
 import { fetchWithAuth, germanNounsUrl } from '@/api/client'
 import { germanNounsEndpoints } from '@/api/endpoints'
-import type { GermanNounResponse, GermanNounSelectionResponse } from '../types'
+import type {
+  GermanGrammaticalCase,
+  GermanNounResponse,
+  GermanNounSelectionResponse,
+} from '../types'
+
+const ALL_CASES: { id: GermanGrammaticalCase; label: string }[] = [
+  { id: 'nominativ', label: 'Nominativ' },
+  { id: 'akkusativ', label: 'Akkusativ' },
+  { id: 'dativ', label: 'Dativ' },
+  { id: 'genitiv', label: 'Genitiv' },
+]
 
 interface NounSelectorProps {
   selections: GermanNounSelectionResponse[]
   onSelectionsUpdated: (s: GermanNounSelectionResponse[]) => void
-  onStartPracticing: () => void
+  practiceCases: GermanGrammaticalCase[]
+  onPracticeCasesChange: (cases: GermanGrammaticalCase[]) => void
+  onStartGenderPractice: () => void
+  onStartCasesPractice: () => void
 }
 
-export function NounSelector({ selections, onSelectionsUpdated, onStartPracticing }: NounSelectorProps) {
+export function NounSelector({
+  selections,
+  onSelectionsUpdated,
+  practiceCases,
+  onPracticeCasesChange,
+  onStartGenderPractice,
+  onStartCasesPractice,
+}: NounSelectorProps) {
   const { token } = useAuth()
   const [catalog, setCatalog] = useState<GermanNounResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -150,6 +171,16 @@ export function NounSelector({ selections, onSelectionsUpdated, onStartPracticin
     })
   }
 
+  const toggleCase = (caseId: GermanGrammaticalCase) => {
+    if (practiceCases.includes(caseId)) {
+      onPracticeCasesChange(practiceCases.filter((c) => c !== caseId))
+    } else {
+      onPracticeCasesChange([...practiceCases, caseId])
+    }
+  }
+
+  const canStartCases = selections.length > 0 && practiceCases.length > 0
+
   if (loading) return <p className="text-slate-500">Loading nouns...</p>
 
   return (
@@ -265,19 +296,60 @@ export function NounSelector({ selections, onSelectionsUpdated, onStartPracticin
         </div>
       </div>
 
-      <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="font-semibold text-slate-900">Practice options</h3>
-        <p className="mt-2 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-sm text-indigo-900">
-          {selections.length} noun{selections.length !== 1 ? 's' : ''} selected. The gender exercise uses the catalog and
-          prioritizes nouns you miss.
-        </p>
-        <button
-          type="button"
-          onClick={onStartPracticing}
-          className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Start gender practice
-        </button>
+      <aside className="space-y-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Gender exercise</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Sort nouns into der, die, or das. Uses the full catalog and prioritizes nouns you miss.
+          </p>
+          <button
+            type="button"
+            onClick={onStartGenderPractice}
+            className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Start gender practice
+          </button>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Cases exercise</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Pick the correct article in simple A1/A2 sentences. Uses only your saved nouns.
+          </p>
+
+          <fieldset className="mt-4">
+            <legend className="text-sm font-medium text-slate-700">Cases to practice</legend>
+            <div className="mt-2 space-y-2">
+              {ALL_CASES.map(({ id, label }) => (
+                <label key={id} className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={practiceCases.includes(id)}
+                    onChange={() => toggleCase(id)}
+                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <p className="mt-3 rounded-xl border border-indigo-100 bg-indigo-50 p-3 text-sm text-indigo-900">
+            {selections.length} noun{selections.length !== 1 ? 's' : ''} selected
+            {practiceCases.length > 0
+              ? ` · ${practiceCases.length} case${practiceCases.length !== 1 ? 's' : ''}`
+              : ' · pick at least one case'}
+          </p>
+
+          <button
+            type="button"
+            onClick={onStartCasesPractice}
+            disabled={!canStartCases}
+            className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start cases practice
+          </button>
+        </div>
       </aside>
     </div>
   )

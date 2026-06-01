@@ -163,6 +163,10 @@ export const germanNounsEndpoints = {
       generate: '/api/v1/exercises/nouns/gender/generate',
       evaluate: '/api/v1/exercises/nouns/gender/evaluate',
     },
+    cases: {
+      generate: '/api/v1/exercises/nouns/cases/generate',
+      evaluate: '/api/v1/exercises/nouns/cases/evaluate',
+    },
   },
 } as const
 
