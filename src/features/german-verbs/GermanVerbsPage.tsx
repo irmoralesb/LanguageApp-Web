@@ -3,10 +3,15 @@ import { ProfileSetup } from './components/ProfileSetup'
 import { VerbSelector } from './components/VerbSelector'
 import { ExerciseView } from './components/ExerciseView'
 import { useGermanVerbsGate } from './hooks/useGermanVerbsGate'
+import { useState } from 'react'
+import { ConjugationMcExerciseView } from './components/ConjugationMcExerciseView'
+
+export type GermanVerbsExerciseMode = 'writing' | 'conjugation'
 
 export function GermanVerbsPage() {
   const { view, profile, selections, error, refresh, setProfile, setSelections, showSelection, showReady } =
     useGermanVerbsGate()
+  const [exerciseMode, setExerciseMode] = useState<GermanVerbsExerciseMode>('conjugation')
 
   if (error) {
     return (
@@ -29,8 +34,26 @@ export function GermanVerbsPage() {
         <Link to="/" className="text-sm underline">Home</Link>
       </div>
       {view === 'profile-setup' && <ProfileSetup onProfileCreated={setProfile} />}
-      {view === 'selection' && <VerbSelector selections={selections} onSelectionsUpdated={setSelections} onStartPracticing={showReady} />}
-      {view === 'ready' && profile && <ExerciseView selections={selections} onOpenSelector={showSelection} />}
+      {view === 'selection' && (
+        <VerbSelector
+          selections={selections}
+          onSelectionsUpdated={setSelections}
+          onStartConjugation={() => {
+            setExerciseMode('conjugation')
+            showReady()
+          }}
+          onStartWriting={() => {
+            setExerciseMode('writing')
+            showReady()
+          }}
+        />
+      )}
+      {view === 'ready' && profile && exerciseMode === 'conjugation' && (
+        <ConjugationMcExerciseView selections={selections} onOpenSelector={showSelection} />
+      )}
+      {view === 'ready' && profile && exerciseMode === 'writing' && (
+        <ExerciseView selections={selections} onOpenSelector={showSelection} />
+      )}
     </div>
   )
 }

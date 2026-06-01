@@ -17,6 +17,10 @@ import { PrepositionChoicePage } from '@/features/prepositions/PrepositionChoice
 import { ChatPracticePage } from '@/features/chat-practice/ChatPracticePage'
 import { GermanNounsPage } from '@/features/german-nouns/GermanNounsPage'
 import { GermanVerbsPage } from '@/features/german-verbs/GermanVerbsPage'
+import { ConfusableWordsPage } from '@/features/confusable-words/ConfusableWordsPage'
+import { NaturalRewritePage } from '@/features/natural-rewrite/NaturalRewritePage'
+import { RegisterPracticePage } from '@/features/register-practice/RegisterPracticePage'
+import { ExpressionsPage } from '@/features/expressions/ExpressionsPage'
 import { ServiceAccessRoute } from '@/auth/ServiceAccessRoute'
 
 function App() {
@@ -122,6 +126,46 @@ function App() {
             <ProtectedRoute>
               <ServiceAccessRoute serviceName="english-service">
                 <ChatPracticePage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/confusable-words"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="english-service">
+                <ConfusableWordsPage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/natural-rewrite"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="english-service">
+                <NaturalRewritePage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/register-practice"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="english-service">
+                <RegisterPracticePage />
+              </ServiceAccessRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expressions"
+          element={
+            <ProtectedRoute>
+              <ServiceAccessRoute serviceName="english-service">
+                <ExpressionsPage />
               </ServiceAccessRoute>
             </ProtectedRoute>
           }

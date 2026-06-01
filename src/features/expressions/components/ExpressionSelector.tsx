@@ -1,24 +1,26 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/auth/context/AuthContext'
-import { fetchWithAuth, germanVerbsUrl } from '@/api/client'
-import { germanVerbsEndpoints } from '@/api/endpoints'
-import type { GermanVerbResponse, GermanVerbSelectionResponse } from '../types'
+import { englishUrl, fetchWithAuth } from '@/api/client'
+import { expressionsEndpoints } from '@/api/endpoints'
+import type { EnglishExpressionResponse, EnglishExpressionSelectionResponse } from '../types'
 
-interface VerbSelectorProps {
-  selections: GermanVerbSelectionResponse[]
-  onSelectionsUpdated: (s: GermanVerbSelectionResponse[]) => void
-  onStartConjugation: () => void
-  onStartWriting: () => void
+interface ExpressionSelectorProps {
+  selections: EnglishExpressionSelectionResponse[]
+  onSelectionsUpdated: (s: EnglishExpressionSelectionResponse[]) => void
+  onStartIdiomComplete: () => void
+  onStartCollocationChoice: () => void
+  onStartUseInContext: () => void
 }
 
-export function VerbSelector({
+export function ExpressionSelector({
   selections,
   onSelectionsUpdated,
-  onStartConjugation,
-  onStartWriting,
-}: VerbSelectorProps) {
+  onStartIdiomComplete,
+  onStartCollocationChoice,
+  onStartUseInContext,
+}: ExpressionSelectorProps) {
   const { token } = useAuth()
-  const [catalog, setCatalog] = useState<GermanVerbResponse[]>([])
+  const [catalog, setCatalog] = useState<EnglishExpressionResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState<Set<string>>(new Set())
   const [error, setError] = useState<string | null>(null)
@@ -26,7 +28,7 @@ export function VerbSelector({
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
 
   const selectedIds = useMemo(
-    () => new Set(selections.map((s) => s.german_verb_id)),
+    () => new Set(selections.map((s) => s.english_expression_id)),
     [selections],
   )
 
@@ -34,12 +36,12 @@ export function VerbSelector({
     async function loadCatalog() {
       try {
         const res = await fetchWithAuth(
-          germanVerbsUrl(germanVerbsEndpoints.catalog.list),
+          englishUrl(expressionsEndpoints.catalog.list),
           { method: 'GET' },
           token,
         )
         if (!res.ok) {
-          setError('Failed to load verb catalog.')
+          setError('Failed to load expression catalog.')
           return
         }
         setCatalog(await res.json())
@@ -55,94 +57,128 @@ export function VerbSelector({
   const filteredCatalog = useMemo(() => {
     const q = searchTerm.trim().toLowerCase()
     if (!q) return catalog
-    return catalog.filter((v) =>
-      [v.infinitive, v.definition].some((val) => val.toLowerCase().includes(q)),
+    return catalog.filter((item) =>
+      [item.text, item.definition, item.expression_type].some((val) =>
+        val.toLowerCase().includes(q),
+      ),
     )
   }, [catalog, searchTerm])
 
   const handleToggle = useCallback(
     async (
-      verbId: string,
+      expressionId: string,
       currentSelectedIds: Set<string>,
-      currentSelections: GermanVerbSelectionResponse[],
+      currentSelections: EnglishExpressionSelectionResponse[],
     ) => {
-      setToggling((prev) => new Set(prev).add(verbId))
+      setToggling((prev) => new Set(prev).add(expressionId))
       setError(null)
       try {
-        if (currentSelectedIds.has(verbId)) {
+        if (currentSelectedIds.has(expressionId)) {
           const res = await fetchWithAuth(
-            germanVerbsUrl(germanVerbsEndpoints.profile.removeSelection(verbId)),
+            englishUrl(expressionsEndpoints.profile.removeSelection(expressionId)),
             { method: 'DELETE' },
             token,
           )
-          if (!res.ok) { setError('Failed to remove selection.'); return }
-          onSelectionsUpdated(currentSelections.filter((s) => s.german_verb_id !== verbId))
+          if (!res.ok) {
+            setError('Failed to remove selection.')
+            return
+          }
+          onSelectionsUpdated(
+            currentSelections.filter((s) => s.english_expression_id !== expressionId),
+          )
         } else {
           const res = await fetchWithAuth(
-            germanVerbsUrl(germanVerbsEndpoints.profile.addSelection),
+            englishUrl(expressionsEndpoints.profile.addSelection),
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ german_verb_id: verbId }),
+              body: JSON.stringify({ english_expression_id: expressionId }),
             },
             token,
           )
-          if (!res.ok) { setError('Failed to add selection.'); return }
+          if (!res.ok) {
+            setError('Failed to add selection.')
+            return
+          }
           onSelectionsUpdated([...currentSelections, await res.json()])
         }
       } catch {
         setError('Network error. Please try again.')
       } finally {
-        setToggling((prev) => { const next = new Set(prev); next.delete(verbId); return next })
+        setToggling((prev) => {
+          const next = new Set(prev)
+          next.delete(expressionId)
+          return next
+        })
       }
     },
     [token, onSelectionsUpdated],
   )
 
   const handleSelectAll = useCallback(async () => {
-    const toAdd = filteredCatalog.filter((v) => !selectedIds.has(v.id))
+    const toAdd = filteredCatalog.filter((item) => !selectedIds.has(item.id))
     if (toAdd.length === 0) return
     setError(null)
-    const ids = toAdd.map((v) => v.id)
-    setToggling((prev) => { const next = new Set(prev); ids.forEach((id) => next.add(id)); return next })
-    const newSelections: GermanVerbSelectionResponse[] = []
-    for (const verb of toAdd) {
+    const ids = toAdd.map((item) => item.id)
+    setToggling((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => next.add(id))
+      return next
+    })
+    const newSelections: EnglishExpressionSelectionResponse[] = []
+    for (const item of toAdd) {
       try {
         const res = await fetchWithAuth(
-          germanVerbsUrl(germanVerbsEndpoints.profile.addSelection),
+          englishUrl(expressionsEndpoints.profile.addSelection),
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ german_verb_id: verb.id }),
+            body: JSON.stringify({ english_expression_id: item.id }),
           },
           token,
         )
         if (res.ok) newSelections.push(await res.json())
-      } catch { /* continue */ }
+      } catch {
+        /* continue */
+      }
     }
     onSelectionsUpdated([...selections, ...newSelections])
-    setToggling((prev) => { const next = new Set(prev); ids.forEach((id) => next.delete(id)); return next })
+    setToggling((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => next.delete(id))
+      return next
+    })
   }, [filteredCatalog, selectedIds, selections, token, onSelectionsUpdated])
 
   const handleClearAll = useCallback(async () => {
-    const toRemove = filteredCatalog.filter((v) => selectedIds.has(v.id))
+    const toRemove = filteredCatalog.filter((item) => selectedIds.has(item.id))
     if (toRemove.length === 0) return
     setError(null)
-    const ids = toRemove.map((v) => v.id)
-    setToggling((prev) => { const next = new Set(prev); ids.forEach((id) => next.add(id)); return next })
+    const ids = toRemove.map((item) => item.id)
+    setToggling((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => next.add(id))
+      return next
+    })
     const removedIds = new Set<string>()
-    for (const verb of toRemove) {
+    for (const item of toRemove) {
       try {
         const res = await fetchWithAuth(
-          germanVerbsUrl(germanVerbsEndpoints.profile.removeSelection(verb.id)),
+          englishUrl(expressionsEndpoints.profile.removeSelection(item.id)),
           { method: 'DELETE' },
           token,
         )
-        if (res.ok) removedIds.add(verb.id)
-      } catch { /* continue */ }
+        if (res.ok) removedIds.add(item.id)
+      } catch {
+        /* continue */
+      }
     }
-    onSelectionsUpdated(selections.filter((s) => !removedIds.has(s.german_verb_id)))
-    setToggling((prev) => { const next = new Set(prev); ids.forEach((id) => next.delete(id)); return next })
+    onSelectionsUpdated(selections.filter((s) => !removedIds.has(s.english_expression_id)))
+    setToggling((prev) => {
+      const next = new Set(prev)
+      ids.forEach((id) => next.delete(id))
+      return next
+    })
   }, [filteredCatalog, selectedIds, selections, token, onSelectionsUpdated])
 
   const toggleExpanded = (id: string) => {
@@ -154,12 +190,12 @@ export function VerbSelector({
     })
   }
 
-  if (loading) return <p className="text-slate-500">Loading verbs...</p>
+  if (loading) return <p className="text-slate-500">Loading expressions...</p>
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <p className="text-sm font-semibold text-blue-700">Saved verbs</p>
+        <p className="text-sm font-semibold text-teal-700">Saved expressions</p>
         <h2 className="text-xl font-bold text-slate-900">Choose what to practice</h2>
         <p className="mt-1 text-sm text-slate-600">Selection persists across sessions.</p>
 
@@ -171,12 +207,12 @@ export function VerbSelector({
 
         <div className="mt-5 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <label className="min-w-0 flex-1 text-sm font-medium text-slate-700">
-            Search verbs
+            Search expressions
             <input
               type="search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by infinitive or definition..."
+              placeholder="Search by text, type, or definition..."
               className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
             />
           </label>
@@ -199,26 +235,30 @@ export function VerbSelector({
         </div>
 
         <div className="mb-3 mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
-          <span>Showing {filteredCatalog.length} of {catalog.length} verbs</span>
+          <span>
+            Showing {filteredCatalog.length} of {catalog.length} expressions
+          </span>
           <span>{selections.length} selected</span>
         </div>
 
         <div className="max-h-[32rem] overflow-y-auto rounded-xl border border-slate-200 bg-white">
           {filteredCatalog.length === 0 ? (
             <div className="px-4 py-8 text-center text-sm text-slate-500">
-              No verbs match your search.
+              No expressions match your search.
             </div>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {filteredCatalog.map((verb) => {
-                const isSelected = selectedIds.has(verb.id)
-                const isBusy = toggling.has(verb.id)
-                const isExpanded = expandedIds.has(verb.id)
+              {filteredCatalog.map((item) => {
+                const isSelected = selectedIds.has(item.id)
+                const isBusy = toggling.has(item.id)
+                const isExpanded = expandedIds.has(item.id)
                 return (
                   <li
-                    key={verb.id}
+                    key={item.id}
                     className={`transition ${isBusy ? 'opacity-60' : ''} ${
-                      isSelected ? 'border-blue-400 bg-blue-50' : 'border-transparent hover:bg-slate-50'
+                      isSelected
+                        ? 'border-teal-400 bg-teal-50'
+                        : 'border-transparent hover:bg-slate-50'
                     }`}
                   >
                     <div className="flex items-center gap-3 px-3 py-2">
@@ -226,16 +266,17 @@ export function VerbSelector({
                         type="checkbox"
                         checked={isSelected}
                         disabled={isBusy}
-                        onChange={() => handleToggle(verb.id, selectedIds, selections)}
-                        className="h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                        aria-label={`Select ${verb.infinitive}`}
+                        onChange={() => handleToggle(item.id, selectedIds, selections)}
+                        className="h-4 w-4 shrink-0 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+                        aria-label={`Select ${item.text}`}
                       />
                       <div className="min-w-0 flex-1">
-                        <span className="font-semibold text-slate-900">{verb.infinitive}</span>
+                        <span className="font-semibold text-slate-900">{item.text}</span>
+                        <span className="ml-2 text-xs text-slate-500">{item.expression_type}</span>
                       </div>
                       <button
                         type="button"
-                        onClick={() => toggleExpanded(verb.id)}
+                        onClick={() => toggleExpanded(item.id)}
                         className="shrink-0 rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-white"
                         aria-expanded={isExpanded}
                       >
@@ -244,7 +285,10 @@ export function VerbSelector({
                     </div>
                     {isExpanded && (
                       <div className="border-t border-slate-100 bg-white/70 px-10 pb-3 pt-2 text-sm text-slate-600">
-                        {verb.definition}
+                        {item.definition}
+                        {item.example_sentence && (
+                          <p className="mt-1 italic text-slate-500">{item.example_sentence}</p>
+                        )}
                       </div>
                     )}
                   </li>
@@ -257,31 +301,45 @@ export function VerbSelector({
 
       <aside className="space-y-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="font-semibold text-slate-900">Quick conjugation</h3>
+          <h3 className="font-semibold text-slate-900">Complete the idiom</h3>
           <p className="mt-2 text-sm text-slate-600">
-            Multiple choice drills from your saved verbs. Pick tense and person before each round.
+            Fill in the missing part of an idiom from your saved expressions.
           </p>
           <button
             type="button"
-            onClick={onStartConjugation}
+            onClick={onStartIdiomComplete}
             disabled={selections.length === 0}
-            className="mt-4 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Start conjugation drill
+            Start idiom drill
           </button>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="font-semibold text-slate-900">Writing in context</h3>
+          <h3 className="font-semibold text-slate-900">Collocation choice</h3>
           <p className="mt-2 text-sm text-slate-600">
-            Write the conjugated form in a scenario. Choose tense and person yourself.
+            Pick the word that collocates naturally with the expression.
           </p>
           <button
             type="button"
-            onClick={onStartWriting}
+            onClick={onStartCollocationChoice}
             disabled={selections.length === 0}
-            className="mt-4 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Start writing practice
+            Start collocation drill
+          </button>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Use in context</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Write a sentence using the expression in a given scenario.
+          </p>
+          <button
+            type="button"
+            onClick={onStartUseInContext}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start context drill
           </button>
         </div>
       </aside>

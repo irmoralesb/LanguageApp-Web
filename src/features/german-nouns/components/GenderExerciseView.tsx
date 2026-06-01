@@ -7,6 +7,7 @@ import type {
   NounGenderExerciseEvaluateResponse,
   NounGenderExerciseGenerateResponse,
   NounGenderExerciseItem,
+  NounGenderScope,
 } from '../types'
 
 interface GenderExerciseViewProps {
@@ -35,6 +36,7 @@ function toCards(nouns: NounGenderExerciseItem[]): NounCard[] {
 export function GenderExerciseView({ onOpenSelector }: GenderExerciseViewProps) {
   const { token } = useAuth()
   const [targetScore, setTargetScore] = useState(10)
+  const [scope, setScope] = useState<NounGenderScope>('catalog')
   const [score, setScore] = useState(0)
   const [cards, setCards] = useState<NounCard[]>([])
   const [status, setStatus] = useState<ExerciseStatus>('setup')
@@ -56,7 +58,7 @@ export function GenderExerciseView({ onOpenSelector }: GenderExerciseViewProps) 
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ target_score: targetScore, count }),
+          body: JSON.stringify({ target_score: targetScore, count, scope }),
         },
         token,
       )
@@ -67,7 +69,7 @@ export function GenderExerciseView({ onOpenSelector }: GenderExerciseViewProps) 
       const data: NounGenderExerciseGenerateResponse = await res.json()
       return toCards(data.nouns)
     },
-    [targetScore, token],
+    [targetScore, scope, token],
   )
 
   const startExercise = useCallback(async () => {
@@ -159,9 +161,35 @@ export function GenderExerciseView({ onOpenSelector }: GenderExerciseViewProps) 
         <p className="text-sm font-semibold text-indigo-700">German Noun Genders</p>
         <h2 className="mt-1 text-2xl font-bold text-slate-900">Sort nouns by article</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Drag each singular catalog noun into Der, Die, or Das. Correct drops add 1 point;
-          incorrect drops subtract 1 point and are recorded for future practice.
+          Drag each noun into Der, Die, or Das. Correct drops add 1 point; incorrect drops
+          subtract 1 point and are recorded for future practice.
         </p>
+
+        <fieldset className="mt-4">
+          <legend className="text-sm font-medium text-slate-700">Noun pool</legend>
+          <div className="mt-2 space-y-2 text-sm text-slate-700">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="gender-scope"
+                checked={scope === 'catalog'}
+                onChange={() => setScope('catalog')}
+                className="text-indigo-600"
+              />
+              Full catalog (prioritize missed nouns)
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="gender-scope"
+                checked={scope === 'selections'}
+                onChange={() => setScope('selections')}
+                className="text-indigo-600"
+              />
+              My saved nouns only
+            </label>
+          </div>
+        </fieldset>
 
         {error && (
           <div className="mt-4 rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700">

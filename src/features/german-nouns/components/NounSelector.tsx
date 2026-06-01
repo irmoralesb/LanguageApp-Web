@@ -22,6 +22,8 @@ interface NounSelectorProps {
   onPracticeCasesChange: (cases: GermanGrammaticalCase[]) => void
   onStartGenderPractice: () => void
   onStartCasesPractice: () => void
+  onStartPluralPractice: () => void
+  onStartWritingPractice: () => void
 }
 
 export function NounSelector({
@@ -31,6 +33,8 @@ export function NounSelector({
   onPracticeCasesChange,
   onStartGenderPractice,
   onStartCasesPractice,
+  onStartPluralPractice,
+  onStartWritingPractice,
 }: NounSelectorProps) {
   const { token } = useAuth()
   const [catalog, setCatalog] = useState<GermanNounResponse[]>([])
@@ -348,6 +352,36 @@ export function NounSelector({
             className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Start cases practice
+          </button>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Plural drill</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Pick the correct plural with article (die Häuser). Uses your saved nouns.
+          </p>
+          <button
+            type="button"
+            onClick={onStartPluralPractice}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start plural drill
+          </button>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Singular / plural writing</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Write the German singular or plural form in context. Uses your saved nouns.
+          </p>
+          <button
+            type="button"
+            onClick={onStartWritingPractice}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start writing practice
           </button>
         </div>
       </aside>

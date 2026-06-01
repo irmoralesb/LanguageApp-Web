@@ -27,6 +27,8 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loadingVerbs, setLoadingVerbs] = useState(true)
+  const [tense, setTense] = useState<string>('present')
+  const [person, setPerson] = useState<string>('3sg')
 
   const selectedIds = useMemo(() => new Set(selections.map((s) => s.german_verb_id)), [selections])
   const initialGenerated = useRef(false)
@@ -63,15 +65,13 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
     [token],
   )
 
-  const generateRandom = useCallback(
+  const generateNext = useCallback(
     (availableVerbs: GermanVerbResponse[]) => {
       if (availableVerbs.length === 0) return
       const verb = availableVerbs[Math.floor(Math.random() * availableVerbs.length)]
-      const tense = TENSES[Math.floor(Math.random() * TENSES.length)]
-      const person = PERSONS[Math.floor(Math.random() * PERSONS.length)]
       generateExercise(verb.id, tense, person)
     },
-    [generateExercise],
+    [generateExercise, tense, person],
   )
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
         setVerbs(filtered)
         if (filtered.length > 0 && !initialGenerated.current) {
           initialGenerated.current = true
-          generateRandom(filtered)
+          generateNext(filtered)
         }
       } catch {
         setError('Network error loading verbs.')
@@ -100,7 +100,7 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
       }
     }
     loadAndStart()
-  }, [token, selectedIds, generateRandom])
+  }, [token, selectedIds, generateNext])
 
   const handleCheck = useCallback(async () => {
     if (!exercise || !userAnswer.trim()) return
@@ -179,6 +179,39 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
           {error}
         </div>
       )}
+
+      <div className="mb-5 grid gap-4 sm:grid-cols-2">
+        <label className="text-sm font-medium text-slate-700">
+          Tense
+          <select
+            value={tense}
+            onChange={(e) => setTense(e.target.value)}
+            disabled={generating || (!!exercise && !evaluation)}
+            className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          >
+            {TENSES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-sm font-medium text-slate-700">
+          Person
+          <select
+            value={person}
+            onChange={(e) => setPerson(e.target.value)}
+            disabled={generating || (!!exercise && !evaluation)}
+            className="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          >
+            {PERSONS.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       {generating && <p className="text-sm text-slate-500">Generating exercise...</p>}
 
@@ -264,7 +297,7 @@ export function ExerciseView({ selections, onOpenSelector }: ExerciseViewProps) 
             {evaluation && (
               <button
                 type="button"
-                onClick={() => generateRandom(verbs)}
+                onClick={() => generateNext(verbs)}
                 className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 New exercise

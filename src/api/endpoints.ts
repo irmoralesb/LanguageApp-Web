@@ -167,6 +167,10 @@ export const germanNounsEndpoints = {
       generate: '/api/v1/exercises/nouns/cases/generate',
       evaluate: '/api/v1/exercises/nouns/cases/evaluate',
     },
+    plural: {
+      generate: '/api/v1/exercises/nouns/plural/generate',
+      evaluate: '/api/v1/exercises/nouns/plural/evaluate',
+    },
   },
 } as const
 
@@ -190,5 +194,57 @@ export const germanVerbsEndpoints = {
   exercises: {
     generate: '/api/v1/exercises/verbs/generate',
     evaluate: '/api/v1/exercises/verbs/evaluate',
+    conjugation: {
+      generate: '/api/v1/exercises/verbs/conjugation/generate',
+      evaluate: '/api/v1/exercises/verbs/conjugation/evaluate',
+    },
+  },
+} as const
+
+export const confusableEndpoints = {
+  exercises: {
+    generate: '/api/v1/confusable-words/exercises/generate',
+    evaluate: '/api/v1/confusable-words/exercises/evaluate',
+    stats: '/api/v1/confusable-words/exercises/stats',
+  },
+} as const
+
+export const naturalRewriteEndpoints = {
+  exercises: {
+    generate: '/api/v1/natural-rewrite/exercises/generate',
+    evaluate: '/api/v1/natural-rewrite/exercises/evaluate',
+  },
+} as const
+
+export const registerSwitchEndpoints = {
+  exercises: {
+    generate: '/api/v1/register-switch/exercises/generate',
+    evaluate: '/api/v1/register-switch/exercises/evaluate',
+  },
+} as const
+
+export const expressionsEndpoints = {
+  catalog: {
+    list: '/api/v1/expressions/catalog',
+    byId: (id: string) => `/api/v1/expressions/${id}`,
+  },
+  profile: {
+    selections: '/api/v1/expressions/profile/expressions',
+    addSelection: '/api/v1/expressions/profile/expressions',
+    removeSelection: (id: string) => `/api/v1/expressions/profile/expressions/${id}`,
+  },
+  exercises: {
+    idiomComplete: {
+      generate: '/api/v1/expressions/exercises/idiom-complete/generate',
+      evaluate: '/api/v1/expressions/exercises/idiom-complete/evaluate',
+    },
+    collocationChoice: {
+      generate: '/api/v1/expressions/exercises/collocation-choice/generate',
+      evaluate: '/api/v1/expressions/exercises/collocation-choice/evaluate',
+    },
+    useInContext: {
+      generate: '/api/v1/expressions/exercises/use-in-context/generate',
+      evaluate: '/api/v1/expressions/exercises/use-in-context/evaluate',
+    },
   },
 } as const

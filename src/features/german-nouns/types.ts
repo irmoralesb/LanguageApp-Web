@@ -89,3 +89,22 @@ export interface ExerciseEvaluateResponse {
   feedback: string
   correct_example: string | null
 }
+
+export type NounGenderScope = 'catalog' | 'selections'
+
+export interface NounPluralExerciseGenerateResponse {
+  german_noun_id: string
+  singular: string
+  definition: string
+  article_singular: string
+  prompt_native: string
+  options: string[]
+  incorrect_attempts: number
+  correct_attempts: number
+}
+
+export interface NounPluralExerciseEvaluateResponse {
+  is_correct: boolean
+  feedback: string
+  correct_phrase: string
+}

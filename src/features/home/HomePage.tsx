@@ -9,7 +9,7 @@ export function HomePage() {
     (acc, mod) => {
       if (!hasServiceAccess(mod.serviceName)) return acc
       if (!acc[mod.language]) acc[mod.language] = []
-      acc[mod.language].push(mod)
+      acc[mod.language]!.push(mod)
       return acc
     },
     {} as Partial<Record<ModuleLanguage, typeof PRACTICE_MODULES>>,

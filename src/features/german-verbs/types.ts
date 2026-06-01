@@ -52,3 +52,22 @@ export interface ExerciseEvaluateResponse {
   feedback: string
   correct_example: string | null
 }
+
+export interface VerbConjugationExerciseGenerateResponse {
+  german_verb_id: string
+  infinitive: string
+  definition: string
+  tense: string
+  person: string
+  person_label: string
+  prompt_native: string
+  options: string[]
+  incorrect_attempts: number
+  correct_attempts: number
+}
+
+export interface VerbConjugationExerciseEvaluateResponse {
+  is_correct: boolean
+  feedback: string
+  correct_form: string
+}

@@ -4,10 +4,12 @@ import { ProfileSetup } from './components/ProfileSetup'
 import { NounSelector } from './components/NounSelector'
 import { GenderExerciseView } from './components/GenderExerciseView'
 import { CasesExerciseView } from './components/CasesExerciseView'
+import { ExerciseView } from './components/ExerciseView'
+import { PluralExerciseView } from './components/PluralExerciseView'
 import { useGermanNounsGate } from './hooks/useGermanNounsGate'
 import type { GermanGrammaticalCase } from './types'
 
-export type GermanNounsExerciseMode = 'gender' | 'cases'
+export type GermanNounsExerciseMode = 'gender' | 'cases' | 'plural' | 'writing'
 
 const DEFAULT_PRACTICE_CASES: GermanGrammaticalCase[] = ['nominativ', 'akkusativ', 'dativ']
 
@@ -57,6 +59,14 @@ export function GermanNounsPage() {
             setExerciseMode('cases')
             showReady()
           }}
+          onStartPluralPractice={() => {
+            setExerciseMode('plural')
+            showReady()
+          }}
+          onStartWritingPractice={() => {
+            setExerciseMode('writing')
+            showReady()
+          }}
         />
       )}
       {view === 'ready' && profile && exerciseMode === 'gender' && (
@@ -68,6 +78,12 @@ export function GermanNounsPage() {
           practiceCases={practiceCases}
           onOpenSelector={showSelection}
         />
+      )}
+      {view === 'ready' && profile && exerciseMode === 'plural' && (
+        <PluralExerciseView selections={selections} onOpenSelector={showSelection} />
+      )}
+      {view === 'ready' && profile && exerciseMode === 'writing' && (
+        <ExerciseView selections={selections} onOpenSelector={showSelection} />
       )}
     </div>
   )
