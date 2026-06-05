@@ -23,6 +23,7 @@ export function UseInContextExerciseView({
   const [evaluation, setEvaluation] = useState<ExpressionExerciseEvaluationResponse | null>(null)
   const [generating, setGenerating] = useState(false)
   const [checking, setChecking] = useState(false)
+  const [hintOpen, setHintOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const initialGenerated = useRef(false)
 
@@ -34,6 +35,7 @@ export function UseInContextExerciseView({
     setExercise(null)
     setUserAnswer('')
     setEvaluation(null)
+    setHintOpen(false)
     setError(null)
     try {
       const res = await fetchWithAuth(
@@ -139,7 +141,20 @@ export function UseInContextExerciseView({
       {exercise && (
         <>
           <div className="mb-4 rounded-xl border border-teal-100 bg-teal-50 px-4 py-3 text-sm text-teal-900">
-            Use <strong>{exercise.text}</strong> ({exercise.expression_type}) — {exercise.definition}
+            <button
+              type="button"
+              onClick={() => setHintOpen((open) => !open)}
+              className="font-semibold underline-offset-2 hover:underline"
+              aria-expanded={hintOpen}
+            >
+              {hintOpen ? 'Hide hint' : 'Show hint'}
+            </button>
+            {hintOpen && (
+              <p className="mt-2">
+                Use <strong>{exercise.text}</strong> ({exercise.expression_type}) —{' '}
+                {exercise.definition}
+              </p>
+            )}
           </div>
 
           {exercise.scenario_native && (
