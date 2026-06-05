@@ -12,15 +12,11 @@ import { UpdateProfilePage } from '@/features/profile/UpdateProfilePage'
 import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 import { PhrasalVerbsPage } from '@/features/phrasal-verbs/PhrasalVerbsPage'
 import { PrepositionsPage } from '@/features/prepositions/PrepositionsPage'
-import { MultiplePrepositionsPage } from '@/features/prepositions/MultiplePrepositionsPage'
-import { PrepositionChoicePage } from '@/features/prepositions/PrepositionChoicePage'
 import { ChatPracticePage } from '@/features/chat-practice/ChatPracticePage'
 import { GermanNounsPage } from '@/features/german-nouns/GermanNounsPage'
 import { GermanVerbsPage } from '@/features/german-verbs/GermanVerbsPage'
-import { ConfusableWordsPage } from '@/features/confusable-words/ConfusableWordsPage'
-import { NaturalRewritePage } from '@/features/natural-rewrite/NaturalRewritePage'
-import { RegisterPracticePage } from '@/features/register-practice/RegisterPracticePage'
 import { ExpressionsPage } from '@/features/expressions/ExpressionsPage'
+import { SentenceSkillsPage } from '@/features/sentence-skills/SentenceSkillsPage'
 import { ServiceAccessRoute } from '@/auth/ServiceAccessRoute'
 
 function App() {
@@ -101,23 +97,11 @@ function App() {
         />
         <Route
           path="/prepositions/multiple"
-          element={
-            <ProtectedRoute>
-              <ServiceAccessRoute serviceName="english-service">
-                <MultiplePrepositionsPage />
-              </ServiceAccessRoute>
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/prepositions?mode=multiple" replace />}
         />
         <Route
           path="/prepositions/choice"
-          element={
-            <ProtectedRoute>
-              <ServiceAccessRoute serviceName="english-service">
-                <PrepositionChoicePage />
-              </ServiceAccessRoute>
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/prepositions?mode=choice" replace />}
         />
         {/* Chat Practice */}
         <Route
@@ -131,34 +115,26 @@ function App() {
           }
         />
         <Route
-          path="/confusable-words"
+          path="/sentence-skills"
           element={
             <ProtectedRoute>
               <ServiceAccessRoute serviceName="english-service">
-                <ConfusableWordsPage />
+                <SentenceSkillsPage />
               </ServiceAccessRoute>
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/confusable-words"
+          element={<Navigate to="/sentence-skills?mode=confusable-words" replace />}
         />
         <Route
           path="/natural-rewrite"
-          element={
-            <ProtectedRoute>
-              <ServiceAccessRoute serviceName="english-service">
-                <NaturalRewritePage />
-              </ServiceAccessRoute>
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/sentence-skills?mode=natural-rewrite" replace />}
         />
         <Route
           path="/register-practice"
-          element={
-            <ProtectedRoute>
-              <ServiceAccessRoute serviceName="english-service">
-                <RegisterPracticePage />
-              </ServiceAccessRoute>
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/sentence-skills?mode=register-practice" replace />}
         />
         <Route
           path="/expressions"

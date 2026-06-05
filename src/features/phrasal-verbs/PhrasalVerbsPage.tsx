@@ -52,7 +52,7 @@ export function PhrasalVerbsPage() {
 
       const selectionsData: PhrasalVerbSelectionResponse[] = await selectionsRes.json()
       setSelections(selectionsData)
-      setView(selectionsData.length > 0 ? 'exercise' : 'selection')
+      setView('selection')
     } catch {
       setError('Network error. Please try again.')
     }

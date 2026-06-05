@@ -40,7 +40,7 @@ export function useGermanNounsGate() {
       }
       const selectionsData: GermanNounSelectionResponse[] = await selectionsRes.json()
       setSelectionsState(selectionsData)
-      setView('ready')
+      setView('selection')
     } catch {
       setError('Network error. Please try again.')
     }

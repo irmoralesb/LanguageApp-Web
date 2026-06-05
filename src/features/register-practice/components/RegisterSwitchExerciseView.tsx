@@ -25,7 +25,11 @@ function registerLabel(value: string): string {
   return REGISTERS.find((r) => r.id === value)?.label ?? value
 }
 
-export function RegisterSwitchExerciseView() {
+interface RegisterSwitchExerciseViewProps {
+  onOpenHub?: () => void
+}
+
+export function RegisterSwitchExerciseView({ onOpenHub }: RegisterSwitchExerciseViewProps) {
   const { token } = useAuth()
 
   const [sourceRegister, setSourceRegister] = useState<RegisterOption | ''>('')
@@ -304,13 +308,24 @@ export function RegisterSwitchExerciseView() {
 
           {evaluation && (
             <div className="mt-6 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between">
-              <button
-                type="button"
-                onClick={handleResetSettings}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
-              >
-                Change settings
-              </button>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                {onOpenHub && (
+                  <button
+                    type="button"
+                    onClick={onOpenHub}
+                    className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  >
+                    Choose exercise
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleResetSettings}
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Change settings
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={handleNewExercise}

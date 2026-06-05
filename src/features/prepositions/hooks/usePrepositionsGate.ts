@@ -74,7 +74,7 @@ export function usePrepositionsGate(): PrepositionsGateState {
 
       const selectionsData: PracticeTermSelectionResponse[] = await selectionsRes.json()
       setSelectionsState(selectionsData)
-      setView(selectionsData.length > 0 ? 'ready' : 'selection')
+      setView('selection')
     } catch {
       setError('Network error. Please try again.')
     }

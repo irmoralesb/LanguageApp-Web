@@ -4,7 +4,7 @@ import { fetchWithAuth, prepositionsUrl } from '@/api/client'
 import { prepEndpoints } from '@/api/endpoints'
 import type { UserProfileResponse } from '@/features/prepositions/types'
 
-export type EnglishProfileGateView = 'loading' | 'profile-setup' | 'ready'
+export type EnglishProfileGateView = 'loading' | 'profile-setup' | 'selection' | 'ready'
 
 export function useEnglishProfileGate() {
   const { token } = useAuth()
@@ -30,7 +30,7 @@ export function useEnglishProfileGate() {
         return
       }
       setProfileState(await profileRes.json())
-      setView('ready')
+      setView('selection')
     } catch {
       setError('Network error. Please try again.')
     }
@@ -42,8 +42,11 @@ export function useEnglishProfileGate() {
 
   const setProfile = useCallback((p: UserProfileResponse) => {
     setProfileState(p)
-    setView('ready')
+    setView('selection')
   }, [])
 
-  return { view, profile, error, refresh, setProfile }
+  const showSelection = useCallback(() => setView('selection'), [])
+  const showReady = useCallback(() => setView('ready'), [])
+
+  return { view, profile, error, refresh, setProfile, showSelection, showReady }
 }

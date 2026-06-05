@@ -25,7 +25,7 @@ export function useGermanVerbsGate() {
       if (!sr.ok) { setError('Failed to load selections.'); return }
       const sel: GermanVerbSelectionResponse[] = await sr.json()
       setSelections(sel)
-      setView(sel.length ? 'ready' : 'selection')
+      setView('selection')
     } catch {
       setError('Network error.')
     }

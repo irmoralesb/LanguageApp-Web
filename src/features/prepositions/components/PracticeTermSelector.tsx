@@ -7,13 +7,17 @@ import type { PracticeTermResponse, PracticeTermSelectionResponse } from '../typ
 interface PracticeTermSelectorProps {
   selections: PracticeTermSelectionResponse[]
   onSelectionsUpdated: (selections: PracticeTermSelectionResponse[]) => void
-  onStartPracticing: () => void
+  onStartSingle: () => void
+  onStartMultiple: () => void
+  onStartChoice: () => void
 }
 
 export function PracticeTermSelector({
   selections,
   onSelectionsUpdated,
-  onStartPracticing,
+  onStartSingle,
+  onStartMultiple,
+  onStartChoice,
 }: PracticeTermSelectorProps) {
   const { token } = useAuth()
   const [catalog, setCatalog] = useState<PracticeTermResponse[]>([])
@@ -295,19 +299,49 @@ export function PracticeTermSelector({
         </div>
       </div>
 
-      <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="font-semibold text-slate-900">Practice options</h3>
-        <p className="mt-2 rounded-xl border border-teal-100 bg-teal-50 p-3 text-sm text-teal-900">
-          {selections.length} term{selections.length !== 1 ? 's' : ''} selected. Selection remains available next session.
-        </p>
-        <button
-          type="button"
-          onClick={onStartPracticing}
-          disabled={selections.length === 0}
-          className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Start practice
-        </button>
+      <aside className="space-y-4">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Single preposition</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Practice one preposition at a time with your saved terms.
+          </p>
+          <button
+            type="button"
+            onClick={onStartSingle}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start single drill
+          </button>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Multiple prepositions</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Choose the correct preposition in context from several options.
+          </p>
+          <button
+            type="button"
+            onClick={onStartMultiple}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start multiple drill
+          </button>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="font-semibold text-slate-900">Similar prepositions</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Pick between easily confused prepositions such as in vs into.
+          </p>
+          <button
+            type="button"
+            onClick={onStartChoice}
+            disabled={selections.length === 0}
+            className="mt-4 w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Start similar drill
+          </button>
+        </div>
       </aside>
     </div>
   )

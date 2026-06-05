@@ -100,3 +100,5 @@ export interface PrepositionChoicePairStatsResponse {
   correct_count: number
   incorrect_count: number
 }
+
+export type PrepositionsExerciseMode = 'single' | 'multiple' | 'choice'

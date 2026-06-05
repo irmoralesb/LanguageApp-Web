@@ -41,7 +41,11 @@ function renderSentenceWithBlank(
   )
 }
 
-export function ConfusableWordsExerciseView() {
+interface ConfusableWordsExerciseViewProps {
+  onOpenHub?: () => void
+}
+
+export function ConfusableWordsExerciseView({ onOpenHub }: ConfusableWordsExerciseViewProps) {
   const { token } = useAuth()
 
   const [exercise, setExercise] = useState<ConfusableWordExercisePromptResponse | null>(null)
@@ -261,11 +265,20 @@ export function ConfusableWordsExerciseView() {
           )}
 
           {evaluation && (
-            <div className="mt-6 flex justify-end border-t border-slate-100 pt-4">
+            <div className="mt-6 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-between">
+              {onOpenHub && (
+                <button
+                  type="button"
+                  onClick={onOpenHub}
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  Choose exercise
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => void generateExercise()}
-                className="rounded-lg bg-teal-600 px-5 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                className="rounded-lg bg-teal-600 px-5 py-2 text-sm font-semibold text-white hover:bg-teal-700 sm:ml-auto"
               >
                 New exercise
               </button>
