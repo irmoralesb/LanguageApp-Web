@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 import { resolveAdminPageId } from '@/shared/adminNavigation'
 import { AdminSidebarNav } from '@/layout/AdminSidebarNav'
@@ -128,13 +128,13 @@ export function AppShell() {
             <ul className="space-y-1">
               {modules.map((mod) => (
                 <li key={mod.id}>
-                  <NavLink
+                  <Link
                     to={mod.path}
                     onClick={() => setMobileNavOpen(false)}
-                    className={({ isActive }) => navLinkClass(isActive)}
+                    className={navLinkClass(activeModule?.id === mod.id)}
                   >
                     {mod.title}
-                  </NavLink>
+                  </Link>
                 </li>
               ))}
             </ul>
